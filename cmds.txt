@@ -1,0 +1,93 @@
+# github
+export GITHUB_PAT=
+devtools::install_github("12379Monty/omicScaleR")
+
+
+# or,,, NOT RECOMMENDED
+setwd('..')
+system("R CMD build omicScaleR")
+system("R CMD INSTALL omicScaleR")
+setwd('omicScaleR')
+# Continue ...
+library(omicScaleR)
+
+
+
+# In omicScaleR dir
+usethis::use_mit_license(name="Francois Collin")
+
+
+usethis::use_data_raw(name="HCC_5hmC_data")
+
+devtools::document()
+devtools::check()
+
+### THIS IS TO PUT ON CRAN!!!
+#check_rhub()
+#check_win_devel()
+
+#release()
+
+# Styling
+########################
+formatR::tidy_dir("R")
+# or
+lintr::lint_package()
+
+
+# Documention
+devtools::check()
+devtools::document()
+devtools::load_all()
+devtools::install()
+?this
+
+
+# testing
+usethis::use_testthat()
+
+# Rcpp
+usethis::use_rcpp()
+
+# after cpp code is in place
+devtools::document()
+
+$ Add to NAMESPACE ???
+useDynLib(omicScaleR, .registration=TRUE)
+
+
+devtools::load_all() #### better to Build and Reload!!!
+timesTwo(11) #### STILL DONE WORK!
+
+usethis::use_vignette()
+
+# Creating a website for the R package
+# See https://mvuorre.github.io/exampleRPackage/
+usethis::use_pkgdown()
+pkgdown::build_site()
+pkgdown::build_site()
+
+# travis
+usethis::use_travis()
+
+# README
+Rscript -e "rmarkdown::render('README.Rmd')"
+
+################################################
+# https://r-pkgs.org/
+# https://r-pkgs.org/whole-game.html
+library(devtools)
+packageVersion("devtools")
+
+library(tidyverse)
+library(fs)
+
+# In parent dir, create GSE96058, start R and 
+devtools::create("GSE96058")
+
+## should have 
+### NAMESPACE
+### DESCRIPTION
+### R/
+### .Rbuildignore
+
