@@ -1,0 +1,80 @@
+
+
+processing file: README.Rmd
+  |                                                                              |                                                                      |   0%  |                                                                              |....                                                                  |   6%
+  ordinary text without R code
+
+  |                                                                              |........                                                              |  12%
+label: unnamed-chunk-1 (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                              |............                                                          |  18%
+  ordinary text without R code
+
+  |                                                                              |................                                                      |  24%
+label: dataSets (with options) 
+List of 1
+ $ eval: symbol F
+
+  |                                                                              |.....................                                                 |  29%
+  ordinary text without R code
+
+  |                                                                              |.........................                                             |  35%
+label: example (with options) 
+List of 1
+ $ eval: symbol F
+
+  |                                                                              |.............................                                         |  41%
+  ordinary text without R code
+
+  |                                                                              |.................................                                     |  47%
+label: unnamed-chunk-2 (with options) 
+List of 1
+ $ eval: symbol F
+
+  |                                                                              |.....................................                                 |  53%
+  ordinary text without R code
+
+  |                                                                              |.........................................                             |  59%
+label: unnamed-chunk-3 (with options) 
+List of 1
+ $ eval: symbol F
+
+  |                                                                              |.............................................                         |  65%
+  ordinary text without R code
+
+  |                                                                              |.................................................                     |  71%
+label: unnamed-chunk-4 (with options) 
+List of 1
+ $ eval: symbol F
+
+  |                                                                              |......................................................                |  76%
+  ordinary text without R code
+
+  |                                                                              |..........................................................            |  82%
+label: unnamed-chunk-5 (with options) 
+List of 2
+ $ eval  : symbol F
+ $ indent: chr " "
+
+  |                                                                              |..............................................................        |  88%
+  ordinary text without R code
+
+  |                                                                              |..................................................................    |  94%
+label: unnamed-chunk-6 (with options) 
+List of 1
+ $ eval: symbol F
+
+  |                                                                              |......................................................................| 100%
+  ordinary text without R code
+
+
+output file: README.knit.md
+
+/usr/local/bin/pandoc +RTS -K512m -RTS README.utf8.md --to gfm --from markdown+autolink_bare_uris+tex_math_single_backslash --output README.md --standalone --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/templates/github_document/resources/default.md --filter /usr/local/bin/pandoc-citeproc 
+/usr/local/bin/pandoc +RTS -K512m -RTS README.md --to html4 --from gfm --output README.html --standalone --self-contained --highlight-style pygments --template /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/templates/github_document/resources/preview.html --variable 'github-markdown-css:/Library/Frameworks/R.framework/Versions/4.0/Resources/library/rmarkdown/rmarkdown/templates/github_document/resources/github.css' --email-obfuscation none --metadata pagetitle=PREVIEW 
+
+Preview created: README.html
+
+Output created: README.md

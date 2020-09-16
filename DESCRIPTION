@@ -1,16 +1,22 @@
 Package: GSE96058
-Title: What the Package Does (One Line, Title Case)
+Title: Data for NCBI GEO Series GSE96058
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Francois",
+           family = "Collin",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+           email = "Francois.Collin@gmail.com",
+           comment = c(ORCID = "0000-0002-6202-0141"))
+Description:  Data for NCBI GEO Series GSE112679 are organized
+    into a set of R objects convenient for analyis.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
+Depends:
+    R (>= 3.5.0)
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
