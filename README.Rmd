@@ -8,8 +8,9 @@ link-citations: true
 
 ---
 
-  [![Travis build status](https://travis-ci.com/12379Monty/GSE96058.svg?branch=master)](https://travis-ci.com/12379Monty/GSE96058)
-
+<!--
+[![Travis build status](https://travis-ci.com/12379Monty/GSE96058.svg?branch=master)](https://travis-ci.com/12379Monty/GSE96058)
+-->
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -25,13 +26,32 @@ knitr::opts_chunk$set(
 
 This package contains data from NCBI GEO 
 [Series GSE96058](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058).
-See  Breffer at al. (2018) [@Brueffer:2018aa].
-### UP TO HERE
-Data methylation profiles were collected to investigate
-genome-wide mapping of 5-hydroxymethylcytosines
-in circulating cell-free DNA as reported in Cai et al. (2019)
-(https://gut.bmj.com/content/68/12/2195).
+3,678 patients with breast cancer (BC) were studied.  For 405 tumors, a comprehensive 
+multi-rater histopathologic evaluation was performed. Using RNA-seq data, 
+single-gene classifiers and multigene classifiers (MGCs) were trained on consensus 
+histopathology labels. Trained classifiers were tested on a prospective 
+population-based series of 3,273 BCs that included a median follow-up of 52 
+months (Sweden Cancerome Analysis Network—Breast [SCAN-B], 
+ClinicalTrials.gov identifier: NCT02306096), and results were evaluated by 
+agreement statistics and Kaplan-Meier and Cox survival analyses. 
+See  Brueffer et al. (2018) [@Brueffer:2018aa] for a detailed report
+of the findings.
 
+### User note
+
+
+* The data in NCBI GEO
+[Series GSE96058](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058)
+does not contain any of the training samples discussed in the Brueffer et al. (2018) [@Brueffer:2018aa]
+paper.  This package therefore also only contains samples from the  a prospective
+population-based series of 3,273 BCs.
+
+* The count data are stores in several tables due to github file size
+restrictions:
+    - 
+
+
+In this package data from 
 <!-- [@Cai:2019aa] pandoc citations dont work on github (github_document?) -->
 
 

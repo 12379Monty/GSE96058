@@ -1,0 +1,586 @@
+---
+title: "Read Data for NCBI GEO Series GSE96058"
+author: "Francois.collin@gmail.com"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    code_folding: show
+    toc: true
+    # does this have an effect
+    fig_caption: yes
+    # this has no effect
+    number_sections: yes
+    css: ../docs/_pandocFiles/github-markdown.css
+    #css: ../docs/_pandocFiles/pandoc3.css
+bibliography: ../docs/_bibFiles/bibFile.bib
+csl: ../docs/_bibFiles/cell-numeric.csl
+#biblio-style: acm
+link-citations: true
+vignette: >
+ %\VignetteEncoding{UTF-8}
+ %\VignetteEngine{knitr::rmarkdown}
+---
+
+<!-- TO DO - Styling
+
+formatR::tidy_dir("R")
+# or
+lintr::lint_package()
+
+save to preTidy first to compare
+
+-->
+
+
+
+```{r GlobalOptions, results="hide", include=FALSE, cache=FALSE}
+knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
+#knitr::dep_auto()
+ options(knitr.table.format = 'html')
+
+```
+<!-- ######################################################################## -->
+
+
+```{r Prelims, include=FALSE, echo=FALSE, results='hide', message=FALSE,cache=F}
+
+ FN <- "getGSEData"
+if(sum(grepl(FN, list.files()))==0) stop("Check FN")
+
+ PREFIX <- ""
+
+ suppressPackageStartupMessages(require(methods))
+ suppressPackageStartupMessages(require(rmarkdown))
+ suppressPackageStartupMessages(require(bookdown))
+
+ suppressPackageStartupMessages(require(knitr))
+ options(stringsAsFactors=F)
+
+ suppressPackageStartupMessages(require(data.table)) 
+ options(datatable.fread.datatable=F)
+
+ suppressPackageStartupMessages(require(plyr))
+ suppressPackageStartupMessages(require(dplyr))
+ suppressPackageStartupMessages(require(magrittr))
+
+ # Shotcuts for knitting and redering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shotcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+
+ # Using relative paths:
+ # Assuming script is run from GSE96058/data-raw/
+ WRKDIR <- ('..')
+
+ # Not needed if path is relative ...
+ if(!file.exists(WRKDIR)) stop("WRKDIR ERROR: ", WRKDIR)
+
+ # do once
+ #setwd(WRKDIR)
+
+ # file rmarkdown file management options: cache, figures
+ cache_DIR <- file.path('cache/rdGEData/')
+ suppressPackageStartupMessages(dir.create(cache_DIR, recursive=T))
+ opts_chunk$set(cache.path=cache_DIR)
+
+ figure_DIR <- file.path('figures/rdGEData/')
+ suppressPackageStartupMessages(dir.create(figure_DIR, recursive=T))
+ opts_chunk$set(fig.path=paste0(figure_DIR, PREFIX))
+
+ data_DIR <- '../data'
+ if(!file.exists(data_DIR)) stop("data_DIR ERROR: ", data_DIR)
+
+
+```
+<!-- ######################################################################## -->
+
+
+*** 
+
+# Abstract
+
+This script assembles R object from data downloaded from 
+[NCBI/Gene Expression Omnibus Database (GSE96058)](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058).
+The R objects will be assembled into an R data package for
+easy access.  The objects are constructed to parallel the
+analyses of these data as reported in
+Brueffer et al. (2018) [@Brueffer:2018aa]. 
+
+
+
+# Set Analysis Parameters
+ 
+```{r setAnalysisParameters, echo=T, cache=F}
+
+ GSE_ID <- 'GSE96058'
+
+ # extData
+ ################################
+ if(file.exists(file.path('../../extData'))) 
+ EXT_DIR <- file.path('../../extData') else stop("Speficy EXT_DIR")
+
+ # GSE_Data
+ ###################################
+ if(file.exists(file.path(EXT_DIR, GSE_ID)))
+ GSE_DATA_DIR <- file.path(EXT_DIR,GSE_ID) else stop("Speficy GSE_DATA_DIR")
+
+ # SampleDesc-1: GPL11154 (Illumina HiSeq 2000)
+ ###################################
+ GPL_ID1 <- 'GPL11154'
+ if(file.exists(file.path(GSE_DATA_DIR, paste0(GSE_ID,'-',GPL_ID1,'_series_matrix.txt'))))
+ SAMPLE_DESC_FILE1 <- file.path(GSE_DATA_DIR, paste0(GSE_ID,'-',GPL_ID1,'_series_matrix.txt')) else 
+ stop("Speficy SAMPLE_DESC_FILE1")
+ 
+ # SampleDesc-2: GPL18573 (Illumina NextSeq 500)
+ ###################################
+ GPL_ID2 <- 'GPL18573'
+ if(file.exists(file.path(GSE_DATA_DIR, paste0(GSE_ID,'-',GPL_ID2,'_series_matrix.txt'))))
+ SAMPLE_DESC_FILE2 <- file.path(GSE_DATA_DIR, paste0(GSE_ID,'-',GPL_ID2,'_series_matrix.txt')) else 
+ stop("Speficy SAMPLE_DESC_FILE2")
+
+ # gtf
+ ###################################
+ LONG_NAME <- "GSE96058_UCSC_hg38_knownGenes_22sep2014.gtf.gz"
+ if(file.exists(file.path(GSE_DATA_DIR, LONG_NAME)))
+ GTF_FILE <- file.path(GSE_DATA_DIR, LONG_NAME) else
+ stop("Speficy GTF_FILE")
+
+ # Counts
+ ###################################
+ LONG_NAME <- "GSE96058_gene_expression_3273_samples_and_136_replicates_transformed.csv.gz"
+ if(file.exists(file.path(GSE_DATA_DIR, LONG_NAME)))
+ COUNTS_FILE <- file.path(GSE_DATA_DIR, LONG_NAME) else
+ stop("Speficy COUNTS_FILE")
+
+ 
+```
+
+Define some utility functions.  
+ 
+
+## Get Sample Description Data
+
+There are two sample description files corresponding to the two platforms
+used: GPL11154 (Illumina HiSeq 2000) and  GPL18573 (Illumina NextSeq 500) 
+
+Read sample description file for first platform.
+
+```{r readSampDesc1,cache=T, cach.vars=c('data_processing_frm', 'sampDesc1'), eval=T, echo=T, fig.height=6, fig.width=11}
+
+
+ GSEMatrix_obj <- GEOquery::getGEO(filename = SAMPLE_DESC_FILE1, GSEMatrix = T)
+ show(GSEMatrix_obj)
+
+ #DT::datatable(pData(phenoData(GSEMatrix_obj)))
+
+ KEY_FIELDS <- grep(':ch1$', names(pData(phenoData(GSEMatrix_obj))), value=T)
+ knitr::kable(KEY_FIELDS,
+  caption='Key Fields') %>%
+  kableExtra::kable_styling(full_width = F)
+
+ # Data Processing
+ data_processing_frm <-  t(pData(phenoData(GSEMatrix_obj))[1,,drop=F] %>%
+  dplyr::select(starts_with('data_processing')))
+ data_processing_frm[,1] <- sub('data_processing.','',data_processing_frm[,1] )
+
+ knitr::kable(data_processing_frm)%>%
+  kableExtra::kable_styling(full_width = F)
+
+ 
+ sampTitle_vec <- as.character(pData(phenoData(GSEMatrix_obj))[,"title"])
+
+ sampRepl_vec <- grepl('repl$', sampTitle_vec)
+
+
+ bioSamples_vec <- sapply(
+ strsplit(as.character(pData(phenoData(GSEMatrix_obj))[,"relation"]), 
+ split='/'), function(X) rev(X)[1])
+
+ sampAttribs_frm <- pData(phenoData(GSEMatrix_obj)) %>%
+ dplyr::select(ends_with('ch1'))
+ 
+ names(sampAttribs_frm) <- 
+ gsub(' ','_',
+ sub('overall survival days', 'ovrallSurvDays',
+ sub('overall survival event', 'ovrallSurvEvent',
+ sub(':ch1', '',
+ sub('_ch1', '',
+ sub('age at diagnosis', 'ageAtDx',
+ sub(' prediction', '',
+ sub('sgc', 'SGC',
+ sub('mgc', 'MGC',
+ sub('status', 'Status',
+ sub('lymph node', 'lymphNode',
+ names(sampAttribs_frm))))))))))))
+
+ sampDesc1 <- data.frame(
+   geoAcc = pData(phenoData(GSEMatrix_obj))[,"geo_accession"],
+   title = sampTitle_vec,
+   isRepl = sampRepl_vec,
+   sampNo = as.numeric(sub('F','',sub('repl','',sampTitle_vec))),
+   bioSample = bioSamples_vec,
+   sampAttribs_frm)
+
+ str(sampDesc1)
+ 
+ cat("geoAcc is unique - use as rownames:\n")
+ with(sampDesc1, table(table(geoAcc, exclude=NULL)))
+ rownames(sampDesc1) <- sampDesc1$geoAcc
+ 
+ cat("bioSample is unique:\n")
+ with(sampDesc1, table(table(bioSample, exclude=NULL)))
+ 
+ cat("title is unique:\n")
+ with(sampDesc1, table(table(title, exclude=NULL)))
+
+ cat("Some Samples Match by sampNo:")
+ with(sampDesc1, table(table(sampNo, exclude=NULL)))
+
+ # NOTE: examination of the data indicate that sampNo cannot be used
+ # to match Blood with TU or TI samples
+
+```
+
+
+Read sample description file for second platform. 
+
+(Silently)
+```{r readSampDesc2,cache=T, cach.vars='sampDesc2', eval=T, echo=T, fig.height=6, fig.width=11,include=F}
+
+
+ GSEMatrix_obj <- GEOquery::getGEO(filename = SAMPLE_DESC_FILE2, GSEMatrix = T)
+ show(GSEMatrix_obj)
+
+ #DT::datatable(pData(phenoData(GSEMatrix_obj)))
+
+ KEY_FIELDS <- grep(':ch1$', names(pData(phenoData(GSEMatrix_obj))), value=T)
+ 
+ sampTitle_vec <- as.character(pData(phenoData(GSEMatrix_obj))[,"title"])
+
+ sampRepl_vec <- grepl('repl$', sampTitle_vec)
+
+ bioSamples_vec <- sapply(
+ strsplit(as.character(pData(phenoData(GSEMatrix_obj))[,"relation"]), 
+ split='/'), function(X) rev(X)[1])
+
+ sampAttribs_frm <- pData(phenoData(GSEMatrix_obj)) %>%
+ dplyr::select(ends_with('ch1'))
+ 
+ names(sampAttribs_frm) <- 
+ gsub(' ','_',
+ sub('overall survival days', 'ovrallSurvDays',
+ sub('overall survival event', 'ovrallSurvEvent',
+ sub(':ch1', '',
+ sub('_ch1', '',
+ sub('age at diagnosis', 'ageAtDx',
+ sub(' prediction', '',
+ sub('sgc', 'SGC',
+ sub('mgc', 'MGC',
+ sub('status', 'Status',
+ sub('lymph node', 'lymphNode',
+ names(sampAttribs_frm))))))))))))
+
+ sampDesc2 <- data.frame(
+   geoAcc = pData(phenoData(GSEMatrix_obj))[,"geo_accession"],
+   title = sampTitle_vec,
+   isRepl = sampRepl_vec,
+   sampNo = as.numeric(sub('F','',sub('repl','',sampTitle_vec))),
+   bioSample = bioSamples_vec,
+   sampAttribs_frm)
+
+ str(sampDesc2)
+ 
+ cat("geoAcc is unique - use as rownames:\n")
+ with(sampDesc2, table(table(geoAcc, exclude=NULL)))
+ rownames(sampDesc2) <- sampDesc2$geoAcc
+ 
+ cat("bioSample is unique:\n")
+ with(sampDesc2, table(table(bioSample, exclude=NULL)))
+ 
+ cat("title is unique:\n")
+ with(sampDesc2, table(table(title, exclude=NULL)))
+
+ cat("Some Samples Match by sampNo:")
+ with(sampDesc2, table(table(sampNo, exclude=NULL)))
+
+ # NOTE: examination of the data indicate that sampNo cannot be used
+ # to match Blood with TU or TI samples
+
+```
+
+Put the two together.
+
+
+```{r get-sampDesc,cache=T, cach.vars='sampDesc', eval=T, echo=T, fig.height=6, fig.width=11}
+
+ sampDesc <- rbind(sampDesc1, sampDesc2)
+
+ cat("geoAcc is unique - use as rownames:\n")
+ with(sampDesc, table(table(geoAcc, exclude=NULL)))
+ rownames(sampDesc) <- sampDesc$geoAcc
+
+ cat("bioSample is unique:\n")
+ with(sampDesc, table(table(bioSample, exclude=NULL)))
+
+ cat("title is unique:\n")
+ with(sampDesc, table(table(title, exclude=NULL)))
+
+ cat("Some Samples Match by sampNo:\n")
+ with(sampDesc, table(table(sampNo, exclude=NULL)))
+
+ cat("Look at various summaries:\n")
+
+ cat("ageAtDx:\n")
+ sampDesc$ageAtDx <- as.numeric(sampDesc$ageAtDx)
+ summary(sampDesc$ageAtDx)
+
+ 
+ cat("tumor_size:\n")
+ sampDesc$tumor_size <- as.numeric(sampDesc$tumor_size)
+ summary(sampDesc$tumor_size)
+
+ cat("_treated:\n")
+ with(sampDesc, table(chemo_treated, endocrine_treated, exclude=NULL))
+
+ cat("er status:\n")
+ with(sampDesc, 
+ table(er_Status, 
+       paste0('SGC_', er_SGC, ':', 'MGC_', er_MGC), exclude=NULL)
+  )
+
+
+ cat("her2 status:\n")
+ with(sampDesc, 
+ table(her2_Status, 
+       paste0('SGC_', her2_SGC, ':', 'MGC_', her2_MGC), exclude=NULL)
+  )
+
+ cat("pgr status:\n")
+ with(sampDesc,
+ table(pgr_Status,
+       paste0('SGC_', pgr_SGC, ':', 'MGC_', pgr_MGC), exclude=NULL)
+  )
+
+
+ cat("lymphNode:\n")
+ with(sampDesc, table(lymphNode_group, lymphNode_Status, exclude=NULL))
+
+ cat("nhg:\n")
+ with(sampDesc, 
+ table(nhg,  nhg_MGC, exclude=NULL)
+  )
+
+ cat("survival:\n")
+ sampDesc$ovrallSurvDays <- as.numeric(sampDesc$ovrallSurvDays)
+ with(sampDesc, sapply(split(ovrallSurvDays,ovrallSurvEvent), summary))
+
+ cat("pam50:\n")
+ with(sampDesc, table(ovrallSurvEvent,pam50_subtype, exclude=NULL))
+
+
+```
+
+```{r DTsampDesc}
+
+ DT::datatable(sampDesc,  options=list(pageLength = 18))
+
+```
+
+
+
+
+## Get Count Data
+
+
+There are too many samples in this dataset to store into a single count object.
+We will create X count matrices,,,, 
+
+<!-- IDEA
+We will instead read each vector and store to the file system as a separate 
+object.  Matrices will be assembled as needed.  
+-->
+
+
+### Read sequencing data 
+
+```{r  get-counts, eval=T, cache=T, cache.vars=c('featureCount', 'genes_annot'),message=F}
+ ####,results='asis'}
+ suppressPackageStartupMessages(require(edgeR))
+
+ # get counts
+ counts_frm <- data.table::fread(COUNTS_FILE)
+
+ # get genes_annot
+ gtf_frm <- Rgb::read.gtf(GTF_FILE, attr = "split")
+
+ table(gtf_frm$feature)
+
+ gtf_frm <- gtf_frm %>% 
+            dplyr::filter(feature == 'CDS') %>% 
+            dplyr::select(seqname:knownCanonicalClusterId)
+
+ table(gtf_frm$knownCanonicalChrom)
+
+ gtf_frm <- dplyr::filter(gtf_frm, knownCanonicalChrom %in%
+  paste0('chr', c(1:22,'X','Y')))
+          
+ dim(gtf_frm)
+
+ genes_annot <- unique(dplyr::select(gtf_frm,
+    strand, gene_id, geneSymbol, knownToRefSeq:knownCanonicalChromEnd) )
+
+
+ gene_ndx <- match(counts_frm$V1, genes_annot$geneSymbol)
+ cat("Missing genes_annot for", sum(is.na(gene_ndx)), "rows in counts_frm.\n")
+ 
+ genes_annot <- merge(
+  data.frame(geneSymbol=counts_frm$V1),
+  genes_annot[setdiff(gene_ndx, NA),] ,
+  by='geneSymbol', all.x=T)
+
+ featureCount <- counts_frm[, -1]
+ rownames(featureCount) <- counts_frm[,1]
+
+ genes_annot <- genes_annot[match(rownames(featureCount), genes_annot$geneSymbol),]
+ names(genes_annot) <-
+ sub('knownCanonicalChrom', 'chr',
+ sub('knownCanonicalChromStart', 'start',
+ sub('knownCanonicalChromEnd', 'end',
+ names(genes_annot))))
+
+ 
+```
+
+<!-- SKIP - don't want to deal with all the missingness
+### Add GC content to genes_annot
+-->
+```{r addGC, eval=T, cache=T, cache.vars=c('genes_annot'),message=F, eval=F, echo=F}
+ library(BSgenome.Hsapiens.UCSC.hg19)
+ library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+
+ genes_gr <- GRanges(
+ IRanges(start=genes_annot$start, end=genes_annot$end),
+ strand=genes_annot$strand)
+
+ genes_seq <- Biostrings::getSeq(BSgenome.Hsapiens.UCSC.hg19, genes_gr)
+ genes_alf <- Biostrings::alphabetFrequency(genes_seq, collapse=F)[, c("A", "C", "G", "T")]
+
+ genes_annot <- data.frame(genes_annot, genes_alf)
+```
+
+
+
+<br/>
+
+## Save all to `r GSE_ID`
+
+Save replicates in separate tables and the rest into a 5 random
+subsets balanced according to `pam50_subtype`.  The reason for
+save these into separate tables is dur to github file size constraints.
+
+
+```{r save, cache=T, cache.vars=''}
+ # THIS DOESNT WORK
+ #usethis::use_data(get(paste0(GSE_ID, '_sampDesc')), overwrite=T)
+
+
+ # save sampDesc
+ save(list='sampDesc', file=file.path(data_DIR, 'sampDesc.rda'),
+   compress='xz')
+
+ # separate the counts into
+ # repl_1
+ # repl_2 (the 'F*repl$' samples)
+ # and the rest into 4 sample sets, balanced by PAM50 subtype
+
+ repl2_ndx <- grep('repl$', colnames(featureCount))
+ featureCount_repl2 <- featureCount[, repl2_ndx]
+ featureCount <- featureCount[, -repl2_ndx]
+ rm(repl2_ndx)
+
+ repl1_ndx <- match(sub('repl$', '', colnames(featureCount_repl2)),
+   colnames(featureCount))
+ featureCount_repl1 <- featureCount[, repl1_ndx]
+ featureCount <- featureCount[, -repl1_ndx]
+ rm(repl1_ndx)
+
+ # save repl counts
+ save(list='featureCount_repl1', file=file.path(data_DIR, 'featureCount_repl1.rda'),
+   compress='xz')
+ save(list='featureCount_repl2', file=file.path(data_DIR, 'featureCount_repl2.rda'),
+   compress='xz')
+
+
+ # divide the rest into 5 groups - 
+ sample_ndx <- match(colnames(featureCount), sampDesc$title)
+ with(sampDesc[sample_ndx, ], table(pam50_subtype, exclude=NULL))
+
+ set.seed(1)
+ foldid_vec <- caret::createFolds(
+ factor(sampDesc[sample_ndx, "pam50_subtype"]),
+ k=5,
+ list=F)
+
+ fold_samples_lst <- split(sampDesc[sample_ndx, "title"], foldid_vec)
+ 
+ for(JJ in 1:length(fold_samples_lst)){
+  sub_ndx <- match(fold_samples_lst[[JJ]], colnames(featureCount))
+  assign(paste0('featureCount_sub',JJ), featureCount[, sub_ndx])
+  featureCount <- featureCount[, -sub_ndx]
+
+   save(list=paste0('featureCount_sub',JJ,'.rda'), 
+   file=file.path(data_DIR, paste0('featureCount_sub',JJ)),
+   compress='xz')
+
+ } 
+
+
+ if(ncol(featureCount)) stop("Oh, oh - featureCount should now be empty!!!!")
+
+
+  
+```
+ 
+```{r save-genes_annot, cache=T, cache.vars=''}
+ # should be saved with the rest but forgot...
+
+ # save genes_annot
+ save(list='genes_annot', file=file.path(data_DIR, 'genes_annot.rda'),
+   compress='xz')
+
+```
+
+
+# References
+<div id="refs"></div>
+
+
+
+```{r, echo=FALSE}
+ sessionInfo()
+```
+
+
+```{r, echo=FALSE}
+  knit_exit()
+```
+
+### ARCHIVAL CODE BELOW
+<!-- ######################################################################## -->
+
+
+<!-- To run
+# nohup Rscript -e "knitr::knit2html('getGSEData.Rmd')" > getGSEData.log  &
+
+# Or
+# nohup Rscript -e "rmarkdown::render('getGSEData.Rmd')" > getGSEData.log  &
+
+-->
+

@@ -1,77 +1,6 @@
 # github
-export GITHUB_PAT=
-devtools::install_github("12379Monty/omicScaleR")
-
-
-# or,,, NOT RECOMMENDED
-setwd('..')
-system("R CMD build omicScaleR")
-system("R CMD INSTALL omicScaleR")
-setwd('omicScaleR')
-# Continue ...
-library(omicScaleR)
-
-
-
-# In omicScaleR dir
-usethis::use_mit_license(name="Francois Collin")
-
-
-usethis::use_data_raw(name="HCC_5hmC_data")
-
-devtools::document()
-devtools::check()
-
-### THIS IS TO PUT ON CRAN!!!
-#check_rhub()
-#check_win_devel()
-
-#release()
-
-# Styling
-########################
-formatR::tidy_dir("R")
-# or
-lintr::lint_package()
-
-
-# Documention
-devtools::check()
-devtools::document()
-devtools::load_all()
-devtools::install()
-?this
-
-
-# testing
-usethis::use_testthat()
-
-# Rcpp
-usethis::use_rcpp()
-
-# after cpp code is in place
-devtools::document()
-
-$ Add to NAMESPACE ???
-useDynLib(omicScaleR, .registration=TRUE)
-
-
-devtools::load_all() #### better to Build and Reload!!!
-timesTwo(11) #### STILL DONE WORK!
-
-usethis::use_vignette()
-
-# Creating a website for the R package
-# See https://mvuorre.github.io/exampleRPackage/
-usethis::use_pkgdown()
-pkgdown::build_site()
-pkgdown::build_site()
-
-# travis
-usethis::use_travis()
-
-# README
-Rscript -e "rmarkdown::render('README.Rmd')"
+export GITHUB_PAT= *** get from https://github.com/settings/tokens ***
+devtools::install_github("12379Monty/GSE96058")
 
 ################################################
 # https://r-pkgs.org/
@@ -90,4 +19,67 @@ devtools::create("GSE96058")
 ### DESCRIPTION
 ### R/
 ### .Rbuildignore
+
+# cd GSE96058, start R
+
+# In GSE96058 dir
+usethis::use_mit_license(name="Francois Collin")
+
+### ??? usethis::use_data_raw(name="HCC_5hmC_data")
+
+devtools::document()
+devtools::check()
+
+### THIS IS TO PUT ON CRAN!!!
+#check_rhub()
+#check_win_devel()
+
+#release()
+
+# Styling
+########################
+formatR::tidy_dir("R")
+# or
+lintr::lint_package()
+## Also look at package `styler`
+
+# Documention
+devtools::document()
+devtools::check()
+devtools::load_all()
+devtools::install()
+?this
+
+
+###########################
+### DO WE NEED ANY OF THIS???
+# if testing,,,
+usethis::use_testthat()
+
+# if, Rcpp,,,
+usethis::use_rcpp()
+
+# after cpp code is in place
+devtools::document()
+
+$ Add to NAMESPACE ???
+useDynLib(omicScaleR, .registration=TRUE)
+
+
+devtools::load_all() #### better to Build and Reload!!!
+timesTwo(11) #### STILL DONE WORK!
+
+usethis::use_vignette()
+###########################
+
+# Creating a website for the R package
+# See https://mvuorre.github.io/exampleRPackage/
+usethis::use_pkgdown()
+pkgdown::build_site()
+
+# travis
+usethis::use_travis()
+
+# README
+Rscript -e "rmarkdown::render('README.Rmd')"
 
