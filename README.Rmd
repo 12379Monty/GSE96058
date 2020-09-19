@@ -126,12 +126,13 @@ to verify the findings in Li et al. (2018) [@Li:2018aa].
 library(magrittr)
 library(GSE96058)
 
-ER_PR_HER2_tbl <- t(t(with(sampDesc %>% dplyr::filter(!isRepl), 
+ER_PR_HER2_tbl <- with(sampDesc %>% 
+ dplyr::filter(!isRepl & er_Status!='NA'  & pgr_Status!='NA' & her2_Status!='NA'),
  table(ER_PR_HER2=paste(er_Status, pgr_Status, her2_Status, sep='_'),
   exclude=NULL)
- )))
+ )
 
- knitr::kable(t(t(ER_PR_HER2_tbl)),
+ knitr::kable(ER_PR_HER2_tbl,
   caption="ER, PR and HER2 Status")  %>%
   kableExtra::kable_styling(full_width = F)
 

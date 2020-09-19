@@ -450,12 +450,13 @@ examined to verify the findings in Li et al. (2018)
 library(magrittr)
 library(GSE96058)
 
-ER_PR_HER2_tbl <- t(t(with(sampDesc %>% dplyr::filter(!isRepl), 
+ER_PR_HER2_tbl <- with(sampDesc %>% 
+ dplyr::filter(!isRepl & er_Status!='NA'  & pgr_Status!='NA' & her2_Status!='NA'),
  table(ER_PR_HER2=paste(er_Status, pgr_Status, her2_Status, sep='_'),
   exclude=NULL)
- )))
+ )
 
- knitr::kable(t(t(ER_PR_HER2_tbl)),
+ knitr::kable(ER_PR_HER2_tbl,
   caption="ER, PR and HER2 Status")  %>%
   kableExtra::kable_styling(full_width = F)
 ```
@@ -467,6 +468,26 @@ ER_PR_HER2_tbl <- t(t(with(sampDesc %>% dplyr::filter(!isRepl),
 ER, PR and HER2 Status
 
 </caption>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+ER\_PR\_HER2
+
+</th>
+
+<th style="text-align:right;">
+
+Freq
+
+</th>
+
+</tr>
+
+</thead>
 
 <tbody>
 
@@ -497,22 +518,6 @@ ER, PR and HER2 Status
 <td style="text-align:right;">
 
 56
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-0\_0\_NA
-
-</td>
-
-<td style="text-align:right;">
-
-12
 
 </td>
 
@@ -554,38 +559,6 @@ ER, PR and HER2 Status
 
 <td style="text-align:left;">
 
-0\_1\_NA
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-0\_NA\_1
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
 1\_0\_0
 
 </td>
@@ -618,22 +591,6 @@ ER, PR and HER2 Status
 
 <td style="text-align:left;">
 
-1\_0\_NA
-
-</td>
-
-<td style="text-align:right;">
-
-5
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
 1\_1\_0
 
 </td>
@@ -657,150 +614,6 @@ ER, PR and HER2 Status
 <td style="text-align:right;">
 
 232
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-1\_1\_NA
-
-</td>
-
-<td style="text-align:right;">
-
-90
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-1\_NA\_0
-
-</td>
-
-<td style="text-align:right;">
-
-101
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-1\_NA\_1
-
-</td>
-
-<td style="text-align:right;">
-
-34
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-1\_NA\_NA
-
-</td>
-
-<td style="text-align:right;">
-
-2
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-NA\_1\_0
-
-</td>
-
-<td style="text-align:right;">
-
-2
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-NA\_1\_1
-
-</td>
-
-<td style="text-align:right;">
-
-3
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-NA\_NA\_0
-
-</td>
-
-<td style="text-align:right;">
-
-139
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-NA\_NA\_1
-
-</td>
-
-<td style="text-align:right;">
-
-44
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-NA\_NA\_NA
-
-</td>
-
-<td style="text-align:right;">
-
-12
 
 </td>
 
