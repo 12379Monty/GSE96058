@@ -51,6 +51,20 @@ devtools::install()
 
 
 ###########################
+
+# Creating a website for the R package
+# See https://mvuorre.github.io/exampleRPackage/
+usethis::use_pkgdown()
+
+pkgdown::build_site()
+
+# travis
+usethis::use_travis()
+
+# README
+Rscript -e "rmarkdown::render('README.Rmd')"
+
+###########################
 ### DO WE NEED ANY OF THIS???
 # if testing,,,
 usethis::use_testthat()
@@ -61,24 +75,10 @@ usethis::use_rcpp()
 # after cpp code is in place
 devtools::document()
 
-$ Add to NAMESPACE ???
+# Add to NAMESPACE ???
 useDynLib(omicScaleR, .registration=TRUE)
-
 
 devtools::load_all() #### better to Build and Reload!!!
 timesTwo(11) #### STILL DONE WORK!
 
 usethis::use_vignette()
-###########################
-
-# Creating a website for the R package
-# See https://mvuorre.github.io/exampleRPackage/
-usethis::use_pkgdown()
-pkgdown::build_site()
-
-# travis
-usethis::use_travis()
-
-# README
-Rscript -e "rmarkdown::render('README.Rmd')"
-
