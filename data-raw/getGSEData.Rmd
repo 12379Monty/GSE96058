@@ -172,8 +172,9 @@ used: GPL11154 (Illumina HiSeq 2000) and  GPL18573 (Illumina NextSeq 500)
 
 Read sample description file for first platform.
 
-```{r readSampDesc1,cache=T, cach.vars=c('data_processing_frm', 'sampDesc1'), eval=T, echo=T, fig.height=6, fig.width=11}
+```{r get-data-proc,cache=T, cach.vars=c('data_processing', 'GSEMatrix_obj'), eval=T, echo=T, fig.height=6, fig.width=11, eval=T}
 
+#### CLEAR CACHE
 
  GSEMatrix_obj <- GEOquery::getGEO(filename = SAMPLE_DESC_FILE1, GSEMatrix = T)
  show(GSEMatrix_obj)
@@ -186,14 +187,24 @@ Read sample description file for first platform.
   kableExtra::kable_styling(full_width = F)
 
  # Data Processing
- data_processing_frm <-  t(pData(phenoData(GSEMatrix_obj))[1,,drop=F] %>%
+ data_processing <-  t(pData(phenoData(GSEMatrix_obj))[1,,drop=F] %>%
   dplyr::select(starts_with('data_processing')))
- data_processing_frm[,1] <- sub('data_processing.','',data_processing_frm[,1] )
+ data_processing[,1] <- sub('data_processing.','',data_processing[,1] )
 
- knitr::kable(data_processing_frm)%>%
+ colnames(data_processing) <- 'GSE96058_Data_Processing'
+ knitr::kable(data_processing)%>%
   kableExtra::kable_styling(full_width = F)
 
+ # save 
+ save(list='data_processing', file=file.path(data_DIR, 'data_processing.rda'),
+   compress='xz')
+
  
+```
+ 
+```{r readSampDesc1,cache=T, cach.vars=c('sampDesc1'), eval=T, echo=T, fig.height=6, fig.width=11}
+
+
  sampTitle_vec <- as.character(pData(phenoData(GSEMatrix_obj))[,"title"])
 
  sampRepl_vec <- grepl('repl$', sampTitle_vec)
@@ -426,7 +437,7 @@ object.  Matrices will be assembled as needed.
             dplyr::filter(feature == 'CDS') %>% 
             dplyr::select(seqname:knownCanonicalClusterId)
 
- table(gtf_frm$knownCanonicalChrom)
+ #table(gtf_frm$knownCanonicalChrom)
 
  gtf_frm <- dplyr::filter(gtf_frm, knownCanonicalChrom %in%
   paste0('chr', c(1:22,'X','Y')))
@@ -486,7 +497,7 @@ subsets balanced according to `pam50_subtype`.  The reason for
 save these into separate tables is dur to github file size constraints.
 
 
-```{r save, cache=T, cache.vars=''}
+```{r save, cache=T, cache.vars='',eval=F}
  # THIS DOESNT WORK
  #usethis::use_data(get(paste0(GSE_ID, '_sampDesc')), overwrite=T)
 
@@ -548,7 +559,7 @@ save these into separate tables is dur to github file size constraints.
   
 ```
  
-```{r save-genes_annot, cache=T, cache.vars=''}
+```{r save-genes_annot, cache=T, cache.vars='',eval=F}
  # should be saved with the rest but forgot...
 
  # save genes_annot
@@ -556,6 +567,38 @@ save these into separate tables is dur to github file size constraints.
    compress='xz')
 
 ```
+
+After thought ... add featureCount table membership to sampDesc
+```{r , include=F}
+library(GSE96058)
+```
+
+```{r add-countData-to-sampDesc, cache=T, cache.vars=''}
+
+sample_feature_table_vec <- with(sampDesc,
+ifelse(title %in% colnames(featureCount_repl1), 'repl1',
+ifelse(title %in% colnames(featureCount_repl2), 'repl2',
+ifelse(title %in% colnames(featureCount_sub1), 'sub1',
+ifelse(title %in% colnames(featureCount_sub2), 'sub2',
+ifelse(title %in% colnames(featureCount_sub3), 'sub3',
+ifelse(title %in% colnames(featureCount_sub4), 'sub4',
+ifelse(title %in% colnames(featureCount_sub5), 'sub5',
+'ERROR'))))))))
+
+table(sample_feature_table_vec)
+
+sampDesc <- data.frame(countTable=sample_feature_table_vec, sampDesc)
+
+
+# save sampDesc
+save(list='sampDesc', file=file.path(data_DIR, 'sampDesc.rda'),
+   compress='xz')
+
+
+```
+
+
+
 
 
 # References

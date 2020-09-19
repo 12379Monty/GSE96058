@@ -122,6 +122,20 @@ Brueffer et al. (2018) [@Brueffer:2018aa].
  SAMPLE_DESC_FILE2 <- file.path(GSE_DATA_DIR, paste0(GSE_ID,'-',GPL_ID2,'_series_matrix.txt')) else 
  stop("Speficy SAMPLE_DESC_FILE2")
 
+ # gtf
+ ###################################
+ LONG_NAME <- "GSE96058_UCSC_hg38_knownGenes_22sep2014.gtf.gz"
+ if(file.exists(file.path(GSE_DATA_DIR, LONG_NAME)))
+ GTF_FILE <- file.path(GSE_DATA_DIR, LONG_NAME) else
+ stop("Speficy GTF_FILE")
+
+ # Counts
+ ###################################
+ LONG_NAME <- "GSE96058_gene_expression_3273_samples_and_136_replicates_transformed.csv.gz"
+ if(file.exists(file.path(GSE_DATA_DIR, LONG_NAME)))
+ COUNTS_FILE <- file.path(GSE_DATA_DIR, LONG_NAME) else
+ stop("Speficy COUNTS_FILE")
+
  
 ```
 
@@ -135,218 +149,3 @@ used: GPL11154 (Illumina HiSeq 2000) and  GPL18573 (Illumina NextSeq 500)
 
 Read sample description file for first platform.
 
-```{r readSampDesc1,cache=T, cach.vars='sampDesc1', eval=T, echo=T, fig.height=6, fig.width=11}
-
- suppressPackageStartupMessages(require(GEOquery))
-
- GSEMatrix_obj <- getGEO(filename = SAMPLE_DESC_FILE1, GSEMatrix = T)
- show(GSEMatrix_obj)
-
- #DT::datatable(pData(phenoData(GSEMatrix_obj)))
-
- KEY_FIELDS <- grep(':ch1$', names(pData(phenoData(GSEMatrix_obj))), value=T)
- knitr::kable(KEY_FIELDS,
-  caption='Key Fields') %>%
-  kableExtra::kable_styling(full_width = F)
-
- # Data Processing
- knitr::kable(t(
- pData(phenoData(GSEMatrix_obj))[1,,drop=F] %>% 
-  dplyr::select(starts_with('data_processing'))
-))%>%
-  kableExtra::kable_styling(full_width = F)
-
- 
- sampTitle_vec <- as.character(pData(phenoData(GSEMatrix_obj))[,"title"])
-
- sampRepl_vec <- grepl('repl$', sampTitle_vec)
-
-
- bioSamples_vec <- sapply(
- strsplit(as.character(pData(phenoData(GSEMatrix_obj))[,"relation"]), 
- split='/'), function(X) rev(X)[1])
-
- sampAttribs_frm <- pData(phenoData(GSEMatrix_obj)) %>%
- dplyr::select(ends_with('ch1'))
- 
- names(sampAttribs_frm) <- 
- gsub(' ','_',
- sub('overall survival days', 'ovrallSurvDays',
- sub('overall survival event', 'ovrallSurvEvent',
- sub(':ch1', '',
- sub('_ch1', '',
- sub('age at diagnosis', 'ageAtDx',
- sub(' prediction', '',
- sub('sgc', 'SGC',
- sub('mgc', 'MGC',
- sub('status', 'Status',
- sub('lymph node', 'lymphNode',
- names(sampAttribs_frm))))))))))))
-
- sampDesc1 <- data.frame(
-   geoAcc = pData(phenoData(GSEMatrix_obj))[,"geo_accession"],
-   title = sampTitle_vec,
-   isRepl = sampRepl_vec,
-   sampNo = as.numeric(sub('F','',sub('repl','',sampTitle_vec))),
-   bioSample = bioSamples_vec,
-   sampAttribs_frm)
-
- str(sampDesc1)
- 
- cat("geoAcc is unique - use as rownames:\n")
- with(sampDesc1, table(table(geoAcc, exclude=NULL)))
- rownames(sampDesc1) <- sampDesc1$geoAcc
- 
- cat("bioSample is unique:\n")
- with(sampDesc1, table(table(bioSample, exclude=NULL)))
- 
- cat("title is unique:\n")
- with(sampDesc1, table(table(title, exclude=NULL)))
-
- cat("Some Samples Match by sampNo:")
- with(sampDesc1, table(table(sampNo, exclude=NULL)))
-
- # NOTE: examination of the data indicate that sampNo cannot be used
- # to match Blood with TU or TI samples
-
-```
-
-
-Read sample description file for second platform. 
-
-(Silently)
-```{r readSampDesc2,cache=T, cach.vars='sampDesc2', eval=T, echo=T, fig.height=6, fig.width=11,include=F}
-
- suppressPackageStartupMessages(require(GEOquery))
-
- GSEMatrix_obj <- getGEO(filename = SAMPLE_DESC_FILE2, GSEMatrix = T)
- show(GSEMatrix_obj)
-
- #DT::datatable(pData(phenoData(GSEMatrix_obj)))
-
- KEY_FIELDS <- grep(':ch1$', names(pData(phenoData(GSEMatrix_obj))), value=T)
- 
- sampTitle_vec <- as.character(pData(phenoData(GSEMatrix_obj))[,"title"])
-
- sampRepl_vec <- grepl('repl$', sampTitle_vec)
-
- bioSamples_vec <- sapply(
- strsplit(as.character(pData(phenoData(GSEMatrix_obj))[,"relation"]), 
- split='/'), function(X) rev(X)[1])
-
- sampAttribs_frm <- pData(phenoData(GSEMatrix_obj)) %>%
- dplyr::select(ends_with('ch1'))
- 
- names(sampAttribs_frm) <- 
- gsub(' ','_',
- sub('overall survival days', 'ovrallSurvDays',
- sub('overall survival event', 'ovrallSurvEvent',
- sub(':ch1', '',
- sub('_ch1', '',
- sub('age at diagnosis', 'ageAtDx',
- sub(' prediction', '',
- sub('sgc', 'SGC',
- sub('mgc', 'MGC',
- sub('status', 'Status',
- sub('lymph node', 'lymphNode',
- names(sampAttribs_frm))))))))))))
-
- sampDesc2 <- data.frame(
-   geoAcc = pData(phenoData(GSEMatrix_obj))[,"geo_accession"],
-   title = sampTitle_vec,
-   isRepl = sampRepl_vec,
-   sampNo = as.numeric(sub('F','',sub('repl','',sampTitle_vec))),
-   bioSample = bioSamples_vec,
-   sampAttribs_frm)
-
- str(sampDesc2)
- 
- cat("geoAcc is unique - use as rownames:\n")
- with(sampDesc2, table(table(geoAcc, exclude=NULL)))
- rownames(sampDesc2) <- sampDesc2$geoAcc
- 
- cat("bioSample is unique:\n")
- with(sampDesc2, table(table(bioSample, exclude=NULL)))
- 
- cat("title is unique:\n")
- with(sampDesc2, table(table(title, exclude=NULL)))
-
- cat("Some Samples Match by sampNo:")
- with(sampDesc2, table(table(sampNo, exclude=NULL)))
-
- # NOTE: examination of the data indicate that sampNo cannot be used
- # to match Blood with TU or TI samples
-
-```
-
-Put the two together.
-
-
-```{r get-sampDesc,cache=T, cach.vars='sampDesc', eval=T, echo=T, fig.height=6, fig.width=11}
-
- sampDesc <- rbind(sampDesc1, sampDesc2)
-
- cat("geoAcc is unique - use as rownames:\n")
- with(sampDesc, table(table(geoAcc, exclude=NULL)))
- rownames(sampDesc) <- sampDesc$geoAcc
-
- cat("bioSample is unique:\n")
- with(sampDesc, table(table(bioSample, exclude=NULL)))
-
- cat("title is unique:\n")
- with(sampDesc, table(table(title, exclude=NULL)))
-
- cat("Some Samples Match by sampNo:\n")
- with(sampDesc, table(table(sampNo, exclude=NULL)))
-
- cat("Look at various summaries:\n")
-
- cat("ageAtDx:\n")
- sampDesc$ageAtDx <- as.numeric(sampDesc$ageAtDx)
- summary(sampDesc$ageAtDx)
-
- 
- cat("tumor_size:\n")
- sampDesc$tumor_size <- as.numeric(sampDesc$tumor_size)
- summary(sampDesc$tumor_size)
-
- cat("_treated:\n")
- with(sampDesc, table(chemo_treated, endocrine_treated, exclude=NULL))
-
- car("er status:\n")
- with(sampDesc, 
- table(er_Status, 
-       paste0('SGC_', er_SGC, ':', 'MGC_', er_MGC), exclude=NULL)
-  )
-
-
- car("her2 status:\n")
- with(sampDesc, 
- table(her2_Status, 
-       paste0('SGC_', her2_SGC, ':', 'MGC_', her2_MGC), exclude=NULL)
-  )
-
- car("pgr status:\n")
- with(sampDesc,
- table(pgr_Status,
-       paste0('SGC_', pgr_SGC, ':', 'MGC_', pgr_MGC), exclude=NULL)
-  )
-
-
- cat("lymphNode:\n")
- with(sampDesc, table(lymphNode_group, lymphNode_Status, exclude=NULL))
-
- cat("nhg:\n")
- with(sampDesc, 
- table(nhg,  nhg_MGC, exclude=NULL)
-  )
-
- cat("survival:\n")
- sampDesc$ovrallSurvDays <- as.numeric(sampDesc$ovrallSurvDays)
- with(sampDesc, sapply(split(ovrallSurvDays,ovrallSurvEvent), summary))
-
- cat("pam50:\n")
- with(sampDesc, table(ovrallSurvEvent,pam50_subtype, exclude=NULL))
-
-
-```

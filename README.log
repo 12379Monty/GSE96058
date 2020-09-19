@@ -1,70 +1,107 @@
 
 
 processing file: README.Rmd
-  |                                                                              |                                                                      |   0%  |                                                                              |....                                                                  |   6%
+  |                                                                              |                                                                      |   0%  |                                                                              |...                                                                   |   4%
   ordinary text without R code
 
-  |                                                                              |........                                                              |  12%
-label: unnamed-chunk-1 (with options) 
+  |                                                                              |......                                                                |   8%
+label: global-options (with options) 
 List of 1
  $ include: logi FALSE
 
-  |                                                                              |............                                                          |  18%
+  |                                                                              |........                                                              |  12%
   ordinary text without R code
 
-  |                                                                              |................                                                      |  24%
+  |                                                                              |...........                                                           |  16%
 label: dataSets (with options) 
-List of 1
- $ eval: symbol F
-
-  |                                                                              |.....................                                                 |  29%
-  ordinary text without R code
-
-  |                                                                              |.........................                                             |  35%
-label: example (with options) 
-List of 1
- $ eval: symbol F
-
-  |                                                                              |.............................                                         |  41%
-  ordinary text without R code
-
-  |                                                                              |.................................                                     |  47%
-label: unnamed-chunk-2 (with options) 
-List of 1
- $ eval: symbol F
-
-  |                                                                              |.....................................                                 |  53%
-  ordinary text without R code
-
-  |                                                                              |.........................................                             |  59%
-label: unnamed-chunk-3 (with options) 
-List of 1
- $ eval: symbol F
-
-  |                                                                              |.............................................                         |  65%
-  ordinary text without R code
-
-  |                                                                              |.................................................                     |  71%
-label: unnamed-chunk-4 (with options) 
-List of 1
- $ eval: symbol F
-
-  |                                                                              |......................................................                |  76%
-  ordinary text without R code
-
-  |                                                                              |..........................................................            |  82%
-label: unnamed-chunk-5 (with options) 
 List of 2
- $ eval  : symbol F
- $ indent: chr " "
+ $ eval: symbol T
+ $ echo: symbol F
+
+  |                                                                              |..............                                                        |  20%
+  ordinary text without R code
+
+  |                                                                              |.................                                                     |  24%
+label: data-processing (with options) 
+List of 1
+ $ eval: symbol T
+
+  |                                                                              |....................                                                  |  28%
+  ordinary text without R code
+
+  |                                                                              |......................                                                |  32%
+label: unnamed-chunk-1 (with options) 
+List of 1
+ $ eval: symbol T
+
+  |                                                                              |.........................                                             |  36%
+   inline R code fragments
+
+  |                                                                              |............................                                          |  40%
+label: er-status-pred
+  |                                                                              |...............................                                       |  44%
+  ordinary text without R code
+
+  |                                                                              |..................................                                    |  48%
+label: chemo-survival (with options) 
+List of 2
+ $ fig.height: num 4
+ $ fig.width : num 6
+
+  |                                                                              |....................................                                  |  52%
+  ordinary text without R code
+
+  |                                                                              |.......................................                               |  56%
+label: endocrine-survival (with options) 
+List of 2
+ $ fig.height: num 4
+ $ fig.width : num 6
+
+  |                                                                              |..........................................                            |  60%
+  ordinary text without R code
+
+  |                                                                              |.............................................                         |  64%
+label: look-pam50 (with options) 
+List of 2
+ $ fig.height: num 4
+ $ fig.width : num 6
+
+  |                                                                              |................................................                      |  68%
+  ordinary text without R code
+
+  |                                                                              |..................................................                    |  72%
+label: bxp-repl1 (with options) 
+List of 2
+ $ fig.height: num 4
+ $ fig.width : num 10
+
+  |                                                                              |.....................................................                 |  76%
+  ordinary text without R code
+
+  |                                                                              |........................................................              |  80%
+label: density-repl1 (with options) 
+List of 2
+ $ fig.height: num 4
+ $ fig.width : num 10
+
+  |                                                                              |...........................................................           |  84%
+  ordinary text without R code
 
   |                                                                              |..............................................................        |  88%
+label: bxp-repl1-filtered (with options) 
+List of 2
+ $ fig.height: num 4
+ $ fig.width : num 10
+
+  |                                                                              |................................................................      |  92%
   ordinary text without R code
 
-  |                                                                              |..................................................................    |  94%
-label: unnamed-chunk-6 (with options) 
-List of 1
- $ eval: symbol F
+  |                                                                              |...................................................................   |  96%
+label: plotMDS-repl1 (with options) 
+List of 3
+ $ cache     : symbol T
+ $ fig.height: num 4
+ $ fig.width : num 10
 
   |                                                                              |......................................................................| 100%
   ordinary text without R code

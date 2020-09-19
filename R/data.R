@@ -43,6 +43,10 @@
 #' }
 "sampDesc"
 
+#' A data frame with one column describing data processing in GSE96058
+#'
+"data_processing"
+
 #' A matrix of feature counts for replicated samples - replicate 1
 #'
 #' featureCount_repl1 - a matrix of feature counts for replicated samples - replicate 1

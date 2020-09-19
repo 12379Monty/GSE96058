@@ -1,5 +1,6 @@
 ---
 title: GSE96058 R Data Package
+always_allow_html: yes
 output: github_document   ### will keep md file!!!
 bibliography: docs/_bibFiles/bibFile.bib
 csl: docs/_bibFiles/cell-numeric.csl
@@ -14,13 +15,17 @@ link-citations: true
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r global-options, include = FALSE}
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+
+ options(knitr.table.format = 'html')
+
 ```
 
 
@@ -37,119 +42,329 @@ agreement statistics and Kaplan-Meier and Cox survival analyses.
 See  Brueffer et al. (2018) [@Brueffer:2018aa] for a detailed report
 of the findings.
 
-### User note
-
+### User notes
 
 * The data in NCBI GEO
 [Series GSE96058](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058)
 does not contain any of the training samples discussed in the Brueffer et al. (2018) [@Brueffer:2018aa]
-paper.  This package therefore also only contains samples from the  a prospective
+paper.  This package therefore only contains samples from the prospective
 population-based series of 3,273 BCs.
 
-* The count data are stores in several tables due to github file size
+* The gene expression data are stored in several tables due to github file size
 restrictions:
-    - 
+    - featureCount_repl1, featureCount_repl2: 30865 x 136 tables of 
+counts for replicated samples
+    - featureCount_sub1-_sub5: 30865 x 626-629 tables of counts 
+for random subsets of samples, balanced over pam scores.
 
+*  We use `featureCount` although the gene coverage measures
+stored in the GEO data set are `FPKM` estimates of gene expression.
 
-In this package data from 
-<!-- [@Cai:2019aa] pandoc citations dont work on github (github_document?) -->
-
-
-
-## Data sets  
-
-```{r dataSets, eval=F}
-  library(GSE96058)
-
-  tmp <- data(package='GSE96058')
-  knitr::kable(tmp$results[, c("Item", "Title")])
-
-```
-
-
+<br/>
 
 ## Installation
-
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("12379Monty/GSE96058")
 ```
 
-## Example
+
+## Data sets  
+
+```{r dataSets, eval=T, echo=F}
+
+library(magrittr)
+
+tmp <- data(package='GSE96058')
+knitr::kable(tmp$results[, c("Item", "Title")]) %>%
+  kableExtra::kable_styling(full_width = F)
 
 
-```{r example, eval=F}
+```
+
+
+## Data Processing
+
+The data processing step descriptions were extracted from the sample 
+table in the GSE96058 dataset and stored as a separate data from
+in the GSE96058 data package; `data_processing`
+
+```{r data-processing, eval=T}
+
+library(GSE96058)
+
+knitr::kable(data_processing,
+  row.names=F)  %>%
+  kableExtra::kable_styling(full_width = F)
+
+```
+
+
+
+## Examples
+
+### ER/PR/HER2 status
+
+* To  identify breast cancer associated read-through fusion transcripts,
+Varley et al. (2014) [@Varley:2014aa] analyzed the paired-end
+RNA-seq data from of 168 breast samples, including 28 breast cancer
+cell lines, 42 triple negative breast cancer primary tumors,
+42 estrogen receptor positive breast cancer primary
+tumors, and 56 non-malignant breast tissue samples. Data
+are deposited in [GEO GSE58135](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE58135)
+
+* Analyzing this dataset Li et al. (2018) [@Li:2018aa] identified 
+797 DEGs uniquely expressed in triple negative BC (TNBC) and 1403 DEGs uniquely expressed 
+in estrogen positive and HER2 negative BC (ER+HER2-BC).   
+
+This dataset has a limited number of TNBC and ER+HER2-BC that could be examined
+to verify the findings in Li et al. (2018) [@Li:2018aa]. 
+
+```{r, eval=T}
+
 library(magrittr)
 library(GSE96058)
+
+ER_PR_HER2_tbl <- t(t(with(sampDesc %>% dplyr::filter(!isRepl), 
+ table(ER_PR_HER2=paste(er_Status, pgr_Status, her2_Status, sep='_'),
+  exclude=NULL)
+ )))
+
+ knitr::kable(t(t(ER_PR_HER2_tbl)),
+  caption="ER, PR and HER2 Status")  %>%
+  kableExtra::kable_styling(full_width = F)
+
+
 ```
 
 <br/>
 
-* sampType is used to distinguish blood from tissue samples.  The latter
-can be tumor or tumor adjacent (sampType==TI).  
+###  ER status vs predicted value
 
-```{r, eval=F}
-with(sampDesc, table(sampType, trainValGroup, exclude=NULL))
+* The GSE58135 dataset contains single gene and multi gene predictors
+of ER/PR/HER2/ki67 status:    
+        -  `r setdiff(grep('_Status', names(sampDesc), value=T),  'lymphNode_Status')`    
+        -  `r grep('SGC', names(sampDesc), value=T)`   
+        -  `r grep('MGC', names(sampDesc), value=T)`  
+
+
+```{r er-status-pred}
+
+SGC_tbl <- with(sampDesc,
+ table(er_Status, er_SGC)
+)
+dimnames(SGC_tbl)[[1]] <- paste0('ER=', dimnames(SGC_tbl)[[1]])
+
+MGC_tbl <- with(sampDesc,
+ table(er_Status, er_MGC)
+)
+dimnames(MGC_tbl)[[1]] <- paste0('ER=', dimnames(MGC_tbl)[[1]])
+
+
+knitr::kable(SGC_tbl, caption='ER Status - SGC Predictions')  %>%
+  kableExtra::kable_styling(full_width = F)
+
+knitr::kable(MGC_tbl, caption='ER Status - MGC Predictions')  %>%
+  kableExtra::kable_styling(full_width = F)
+
+```
+
+Similarly for PGR, HER2 and ki67.
+
+
+<br/>
+
+
+
+### Treatment and survival.
+
+* The GSE58135 dataset contains treatment and survival data
+
+
+```{r chemo-survival, fig.height=4, fig.width=6}
+ ###, fig.cap="Survival Days vs chemo_treated*ovrallSurvEvent"}
+
+chemo_surv_lst <- with(sampDesc %>% dplyr::filter(chemo_treated %in% c('0','1')),
+  split(ovrallSurvDays, 
+   paste0('chemo_',chemo_treated, '\nSrvEv_', ovrallSurvEvent))
+)
+
+boxplot(chemo_surv_lst, ylab='ovrallSurvDays')
+title("Survival Days vs chemo_treated*ovrallSurvEvent")
+
+```
+
+Can similarly examine survival vs endocrine_treated.
+
+```{r endocrine-survival, fig.height=4, fig.width=6}
+ ###, fig.cap="Survival Days vs endocrine_treated*ovrallSurvEvent",eval=F, echo=F}
+
+endocrine_surv_lst <- with(sampDesc %>% dplyr::filter(endocrine_treated %in% c('0','1')),
+  split(ovrallSurvDays, 
+   paste0('endocrine_',endocrine_treated, '\nSrvEv_', ovrallSurvEvent))
+)
+
+boxplot(endocrine_surv_lst, ylab='ovrallSurvDays')
+title("Survival Days vs endocrine_treated*ovrallSurvEvent")
+
 ```
 
 <br/>
 
-*  For blood samples, outcome is specific Dx which can be used to
-investigate 5hmc profile differences between healthy, benign
-and malignant samples.
 
-```{r, eval=F}
-with(sampDesc %>% dplyr::filter(sampType=='blood'), 
-     table(outcome, trainValGroup, exclude=NULL))
+###  PAM50 subtyping 
+
+* GSE96058 has PAM50 subtypung information - see data processing above.
+Samples were distributed across different count tables in order to meet
+github file size constraints.  This allocation was done to keep
+the PAM50 score distribution constant. 
+
+
+```{r look-pam50, fig.height=4, fig.width=6}
+ ###, fig.cap="Sapmple PAM subtype vs Count Table" }
+
+pam50_byTable_tbl <- with(sampDesc,
+ table(pam50_subtype, countTable))
+
+barplot(pam50_byTable_tbl, beside=T, legend=T, args.legend=list(x='topleft'))
+title("Sample PAM subtype by subset")
+
+
 ```
 
-<br/>
+Let's examine how counts cluster for one of the subsets.
 
-* outcome2 pools Benign+Healthy and Cirrhosis+CHB.  
+First look at coverage, ordered by sample ID (sometimes a proxy for
+processing time effects)
 
-```{r, eval=F}
-with(sampDesc %>% dplyr::filter(sampType=='blood'), 
-     table(outcome2, trainValGroup, exclude=NULL))
+```{r bxp-repl1, fig.height=4, fig.width=10}
+###, fig.cap="Coverage for repl1 samples ordered by bioSample ID"}
+KellyColors.vec <- c(
+  "#222222", "#F3C300", "#875692", "#F38400", "#A1CAF1",
+  "#BE0032", "#C2B280", "#848482", "#008856", "#E68FAC", "#0067A5",
+  "#F99379", "#604E97", "#F6A600", "#B3446C", "#DCD300", "#882D17",
+  "#8DB600", "#654522", "#E25822", "#2B3D26"
+)
+col_vec <- KellyColors.vec
+
+pamVal_vec <- with(sampDesc, unique(pam50_subtype))
+pamCol_vec <- col_vec[1:length(pamVal_vec)]
+names(pamCol_vec) <- pamVal_vec
+
+sampDesc_repl1 <- sampDesc[match(colnames(featureCount_repl1), sampDesc$title),]
+
+o.v <- order(sampDesc_repl1$bioSample)
+
+sampDesc_repl1 <- sampDesc_repl1[o.v,]
+featureCount_repl1 <- featureCount_repl1[, o.v]
+rm(o.v)
+
+par(mfrow = c(1, 1), mar = c(2, 2, 2, 4), oma = c(0, 1, 4, 2))
+
+# AqNPATisMix outline=T for LBO
+boxplot(featureCount_repl1,
+  add = F,
+  ylim = c(-4, 4), 
+  staplewex = 0, # remove horizontal whisker lines
+  staplecol = "white", # just to be totally sure
+  outline = F, # remove outlying points
+  whisklty = 0, # remove vertical whisker lines
+  las = 2, horizontal = F, xaxt = "n",
+  border = pamCol_vec[sampDesc_repl1$pam50_subtype])
+title("Coverage for repl1 samples ordered by bioSample ID")
+
+legend('top', text.col=pamCol_vec, legend=names(pamCol_vec), bty='n', horiz=T)
+
+
 ```
 
-<br/>
+```{r density-repl1, fig.height=4, fig.width=10}
+###, fig.cap="Coverage densities for repl1 samples"}
 
-* outcome3 is HCC vs the rest.  
+par(mfcol = c(1, 1), mar = c(2, 2, 1, 1), oma = c(0, 3, 2, 0))
 
- ```{r, eval=F}
-with(sampDesc %>% dplyr::filter(sampType=='blood'), 
-     table(outcome3, trainValGroup, exclude=NULL))
-```
 
-<br/>
+plot(density(featureCount_repl1[, 1]),
+  col = pamCol_vec[sampDesc_repl1$pam50_subtype[1]],
+  lty = 1, lwd = 2, 
+  xlim = c(-4, 7), ylim = c(0, .4), las = 2, main = "", xlab = ""
+)
+title("Coverage densities for repl1 samples")
 
-* sampDesc is used to provide sample information 
-for the feature count data.  
-
-```{r, eval=F}
-TUTI_samdesc <- sampDesc[colnames(TUTI_featureCount),]
-
-with(TUTI_samdesc, table(sampType, tissueSubtype,exclude=NULL))
-
-par(mfrow=c(2,1), mar=c(4,3,2,3),oma=c(0,0,2,0))
-for(ST in unique(TUTI_samdesc$sampType)){
-  ST_ndx <- which(TUTI_samdesc$sampType==ST)
-  boxplot(log2(TUTI_featureCount+1)[,ST_ndx], outline=F, las=2, 
-          ylab='log2(count+1)', xaxt='n')
-  axis(side=1, outer=F, at=1:length(ST_ndx), 
-       label=TUTI_samdesc$title[ST_ndx],las=2)
-  title(paste('sampType =', ST)) 
-
-  sample_median <- apply(log2(TUTI_featureCount[,ST_ndx]+1),2,median)
-  abline(h=median(sample_median), col='green')
-  axis(side=4, at=round(median(sample_median),1),las=2, 
-       col.axis='green', line=-0.5,tick=F)
- 
+for (JJ in 2:ncol(featureCount_repl1)) {
+  den <- density(featureCount_repl1[, JJ])
+  lines(den$x, den$y,
+    col = pamCol_vec[sampDesc_repl1$pam50_subtype[JJ]],
+    lty = 1)
 }
- 
+
+legend('top', text.col=pamCol_vec, legend=names(pamCol_vec), bty='n', horiz=T)
+
 
 ```
+
+FPKM of zero looks like a good place to separate expressed from weakly expressed
+genes.  Apply this filter, requiring at a gene to be epxressed beyond this 
+nominal value in at least 10 samples to be considered for this analysis.
+
+```{r bxp-repl1-filtered, fig.height=4, fig.width=10}
+   ### , fig.cap="Filtered Coverage for repl1 samples orderd bi bioSample ID"}
+
+weak.flg <- rowSums(featureCount_repl1 > 0)  < 10
+
+cat("Excluding", round(100*mean(weak.flg),1), "percent of genes.\n")
+cat(sum(!weak.flg), 'genes kept for analysis.\n')
+
+par(mfrow = c(1, 1), mar = c(2, 2, 2, 4), oma = c(0, 1, 4, 2))
+
+# AqNPATisMix outline=T for LBO
+boxplot(featureCount_repl1[!weak.flg,],
+  add = F,
+  ylim = c(-1, 5), 
+  staplewex = 0, # remove horizontal whisker lines
+  staplecol = "white", # just to be totally sure
+  outline = F, # remove outlying points
+  whisklty = 0, # remove vertical whisker lines
+  las = 2, horizontal = F, xaxt = "n",
+  border = pamCol_vec[sampDesc_repl1$pam50_subtype])
+title("Filtered Coverage for repl1 samples ordered by bioSample ID")
+
+legend('top', text.col=pamCol_vec, legend=names(pamCol_vec), bty='n', horiz=T)
+
+
+```
+
+
+
+
+
+
+```{r plotMDS-repl1, cache=T, fig.height=4, fig.width=10}
+   ### , fig.cap='MDS plots filtered coverage in repl1 samples', echo=T}
+
+par(mfcol = c(1, 2), mar = c(4, 4, 2, 1), xpd = NA, oma = c(0, 0, 2, 0))
+
+MDS.out <- limma::plotMDS(featureCount_repl1[!weak.flg,],
+  col = pamCol_vec[sampDesc_repl1$pam50_subtype],
+  pch=1
+)
+
+
+MDS.out <- limma::plotMDS(featureCount_repl1[!weak.flg,],
+  col = pamCol_vec[sampDesc_repl1$pam50_subtype],
+  pch=1,
+  dim.plot = 3:4
+)
+
+mtext(outer=T, side=3,
+ "MDS plots filtered coverage in repl1 samples - Col = pam50_subtype")
+
+```
+
+We see some association with pam subtype, but no strong clustering
+in this display.  
+
 
 ## Package page
 
@@ -163,6 +378,12 @@ for(ST in unique(TUTI_samdesc$sampType)){
 -----
 
 Please note that the 'GSE96058' project is released with a [Contributor Code of Conduct](.github/CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
+
+----- 
+
+## References
+
+<div id="refs"></div>
 
 <!--
 
