@@ -86,3 +86,790 @@ used: GPL11154 (Illumina HiSeq 2000) and  GPL18573 (Illumina NextSeq 500)
 
 Read sample description file for first platform.
 
+
+```r
+ GSEMatrix_obj <- GEOquery::getGEO(filename = SAMPLE_DESC_FILE1, GSEMatrix = T)
+```
+
+```
+## Setting options('download.file.method.GEOquery'='auto')
+```
+
+```
+## Setting options('GEOquery.inmemory.gpl'=FALSE)
+```
+
+```
+## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )
+```
+
+```
+## See spec(...) for full column specifications.
+```
+
+```
+## File stored at:
+```
+
+```
+## /var/folders/wd/v5lfllh152x0hwhtr773cnmnjqcpdt/T//RtmpXHr1t9/GPL11154.soft
+```
+
+```r
+ show(GSEMatrix_obj)
+```
+
+```
+## ExpressionSet (storageMode: lockedEnvironment)
+## assayData: 0 features, 3069 samples 
+##   element names: exprs 
+## protocolData: none
+## phenoData
+##   sampleNames: GSM2528079 GSM2528080 ... GSM2531485 (3069 total)
+##   varLabels: title geo_accession ... tumor size:ch1 (94 total)
+##   varMetadata: labelDescription
+## featureData: none
+## experimentData: use 'experimentData(object)'
+## Annotation: GPL11154
+```
+
+```r
+ #DT::datatable(Biobase::pData(Biobase::phenoData(GSEMatrix_obj)))
+
+ KEY_FIELDS <- grep(':ch1$', names(Biobase::pData(Biobase::phenoData(GSEMatrix_obj))), value=T)
+ knitr::kable(KEY_FIELDS,
+  caption='Key Fields') %>%
+  kableExtra::kable_styling(full_width = F)
+```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Key Fields</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> x </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> age at diagnosis:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> chemo treated:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> endocrine treated:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> er prediction mgc:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> er prediction sgc:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> er status:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> her2 prediction mgc:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> her2 prediction sgc:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> her2 status:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> instrument model:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ki67 prediction mgc:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ki67 prediction sgc:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ki67 status:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> lymph node group:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> lymph node status:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhg prediction mgc:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> nhg:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> overall survival days:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> overall survival event:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> pam50 subtype:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> pgr prediction mgc:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> pgr prediction sgc:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> pgr status:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> scan-b external id:ch1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> tumor size:ch1 </td>
+  </tr>
+</tbody>
+</table>
+
+```r
+ # Data Processing
+ data_processing <-  t(Biobase::pData(Biobase::phenoData(GSEMatrix_obj))[1,,drop=F] %>%
+  dplyr::select(starts_with('data_processing')))
+ data_processing[,1] <- sub('data_processing.','',data_processing[,1] )
+
+ colnames(data_processing) <- 'GSE96058_Data_Processing'
+ knitr::kable(data_processing)%>%
+  kableExtra::kable_styling(full_width = F)
+```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:left;"> GSE96058_Data_Processing </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> data_processing </td>
+   <td style="text-align:left;"> Base-calling using manufacturer's on-instrument software. </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> data_processing.1 </td>
+   <td style="text-align:left;"> Demultiplexing was done with Picard versions 1.120 or 1.128. IlluminaBasecallsToFastq parameters used were ADAPTERS_TO_CHECK=INDEXED, ADAPTERS_TO_CHECK=PAIRED_END, INCLUDE_NON_PF_READS=false </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> data_processing.2 </td>
+   <td style="text-align:left;"> Filtering to remove reads that align (using Bowtie 2 with default parameters except -k 1 --phred33 --local) to ribosomal RNA/DNA (GenBank loci NR_023363.1, NR_003285.2, NR_003286.2, NR_003287.2, X12811.1, U13369.1), phiX174 Illumina control (NC_001422.1), and sequences contained in the UCSC RepeatMasker track (downloaded March 14, 2011). </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> data_processing.3 </td>
+   <td style="text-align:left;"> Fragment size distribution (mean and width) for the alignment step was estimated for each sample using bowtie2 2.2.3 and 2.2.5. Parameter set during estimation were -fr, -k 1, --phred33, --local, and -u 100000, using human genome assembly GRCh38. </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> data_processing.4 </td>
+   <td style="text-align:left;"> Remaining reads were aligned using TopHat2 2.0.12 or 2.0.13 (default parameters except for --mate-inner-dist X (estimated in previous step), --mate-std-dev Y (estimated in previous step), --library-type fr-firststrand, --no-coverage-search, --max-insertion-length 20, --max-deletion-length 20, --read-gap-length 20, --read-edit-dist 22) to the human genome reference GRCh38 together with 104,133 transcript annotations from the UCSC knownGenes table (downloaded September 22, 2014). </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> data_processing.5 </td>
+   <td style="text-align:left;"> Gene expression data in FPKM were generated using cufflinks 2.2.1 (default parameters except –GTF, --frag-bias-correct GRCh38.fa, --multi-read-correct, --library-type fr-firststrand, --total-hits-norm, --max-bundle-frags 10000000). The resulting data was was post-processed by collapsing on 30,865 unique gene symbols (sum of FPKM values of each matching transcript), adding to each expression measurement 0.1 FPKM, and performing a log2 transformation. </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> data_processing.6 </td>
+   <td style="text-align:left;"> PAM50 subtyping was performed using an implementation of the Parker method (Parker et al., J.Clin Oncol 2009). In short, to avoid context dependency when assigning PAM50 subtype by nearest-centroid, a fixed reference was selected to match the original cohort used by Parker et al. with respect to available clinical characteristics. Before subtyping tumors in this study, gene expression of the PAM50 genes for each tumor was centered to the reference set separately using custom R scripts. </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> data_processing.7 </td>
+   <td style="text-align:left;"> Single-gene classifiers (SGCs) and multi-gene classifiers (MGCs) were trained for ER, PgR, HER2, Ki67 (SGC and MGC) and NHG (MGC only) on the expression of the single underlying gene (ESR1, PGR, ERBB2 or MKI67) or multiple genes (5000 most varying genes across all samples) of a 405 sample cohort using consensus pathology scores as labels. Classifier training was performed by selecting expression thresholds that maximize prediction concordance to the consensus scores (SGCs) and nearest shrunken centroids using the pamr R package (MGCs). The classifiers were used to predict the biomarker status in a validation cohort of 3273 samples from patients enrolled in the SCAN-B study. </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> data_processing.8 </td>
+   <td style="text-align:left;"> Genome_build: Human genome reference GRCh38/hg38. </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> data_processing.9 </td>
+   <td style="text-align:left;"> Supplementary_files_format_and_content: Gene expression in FPKM in CSV format. </td>
+  </tr>
+</tbody>
+</table>
+
+```r
+ # save 
+ save(list='data_processing', file=file.path(data_DIR, 'data_processing.rda'),
+   compress='xz')
+```
+ 
+
+```r
+ sampTitle_vec <- as.character(Biobase::pData(Biobase::phenoData(GSEMatrix_obj))[,"title"])
+
+ sampRepl_vec <- grepl('repl$', sampTitle_vec)
+
+
+ bioSamples_vec <- sapply(
+ strsplit(as.character(Biobase::pData(Biobase::phenoData(GSEMatrix_obj))[,"relation"]), 
+ split='/'), function(X) rev(X)[1])
+
+ sampAttribs_frm <- Biobase::pData(Biobase::phenoData(GSEMatrix_obj)) %>%
+ dplyr::select(ends_with('ch1'))
+ 
+ names(sampAttribs_frm) <- 
+ gsub(' ','_',
+ sub('overall survival days', 'ovrallSurvDays',
+ sub('overall survival event', 'ovrallSurvEvent',
+ sub(':ch1', '',
+ sub('_ch1', '',
+ sub('age at diagnosis', 'ageAtDx',
+ sub(' prediction', '',
+ sub('sgc', 'SGC',
+ sub('mgc', 'MGC',
+ sub('status', 'Status',
+ sub('lymph node', 'lymphNode',
+ names(sampAttribs_frm))))))))))))
+
+ sampDesc1 <- data.frame(
+   geoAcc = Biobase::pData(Biobase::phenoData(GSEMatrix_obj))[,"geo_accession"],
+   title = sampTitle_vec,
+   isRepl = sampRepl_vec,
+   sampNo = as.numeric(sub('F','',sub('repl','',sampTitle_vec))),
+   bioSample = bioSamples_vec,
+   sampAttribs_frm)
+
+ str(sampDesc1)
+```
+
+```
+## 'data.frame':	3069 obs. of  36 variables:
+##  $ geoAcc            : chr  "GSM2528079" "GSM2528080" "GSM2528081" "GSM2528082" ...
+##  $ title             : chr  "F1" "F2" "F3" "F4" ...
+##  $ isRepl            : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+##  $ sampNo            : num  1 2 3 4 5 6 9 10 11 12 ...
+##  $ bioSample         : chr  "SAMN06556824" "SAMN06556986" "SAMN06556985" "SAMN06556984" ...
+##  $ source_name       : chr  "Primary breast tumor" "Primary breast tumor" "Primary breast tumor" "Primary breast tumor" ...
+##  $ organism          : chr  "Homo sapiens" "Homo sapiens" "Homo sapiens" "Homo sapiens" ...
+##  $ characteristics   : chr  "scan-b external id: Q008818.C008840.S000215.l.r.m2.c.lib.g.k.a.t" "scan-b external id: Q008769.C008792.S000250.l.r.m.c.lib.g.k.a.t" "scan-b external id: Q008568.C008577.S000424.l.r.m3.c.lib.g.k.a.t" "scan-b external id: Q008909.C009000.S000084.l.r.m.c.lib.g.k.a.t" ...
+##  $ molecule          : chr  "polyA RNA" "polyA RNA" "polyA RNA" "polyA RNA" ...
+##  $ extract_protocol  : chr  "QIAGEN AllPrep" "QIAGEN AllPrep" "QIAGEN AllPrep" "QIAGEN AllPrep" ...
+##  $ taxid             : chr  "9606" "9606" "9606" "9606" ...
+##  $ ageAtDx           : chr  "43" "48" "69" "39" ...
+##  $ chemo_treated     : chr  "1" "1" "1" "1" ...
+##  $ endocrine_treated : chr  "0" "1" "1" "1" ...
+##  $ er_MGC            : chr  "0" "1" "1" "1" ...
+##  $ er_SGC            : chr  "0" "1" "1" "1" ...
+##  $ er_Status         : chr  "NA" "1" "1" "1" ...
+##  $ her2_MGC          : chr  "0" "0" "0" "1" ...
+##  $ her2_SGC          : chr  "0" "0" "0" "1" ...
+##  $ her2_Status       : chr  "0" "0" "0" "1" ...
+##  $ instrument_model  : chr  "HiSeq 2000" "HiSeq 2000" "HiSeq 2000" "HiSeq 2000" ...
+##  $ ki67_MGC          : chr  "1" "0" "1" "1" ...
+##  $ ki67_SGC          : chr  "1" "0" "1" "1" ...
+##  $ ki67_Status       : chr  "NA" "NA" "NA" "NA" ...
+##  $ lymphNode_group   : chr  "NodeNegative" "1to3" "4toX" "1to3" ...
+##  $ lymphNode_Status  : chr  "NodeNegative" "NodePositive" "NodePositive" "NodePositive" ...
+##  $ nhg_MGC           : chr  "G3" "G2" "G3" "G3" ...
+##  $ nhg               : chr  "G3" "G2" "G3" "G3" ...
+##  $ ovrallSurvDays    : chr  "2367" "2367" "2168" "2416" ...
+##  $ ovrallSurvEvent   : chr  "0" "0" "1" "0" ...
+##  $ pam50_subtype     : chr  "Basal" "LumA" "LumB" "LumA" ...
+##  $ pgr_MGC           : chr  "0" "1" "1" "1" ...
+##  $ pgr_SGC           : chr  "0" "1" "1" "1" ...
+##  $ pgr_Status        : chr  "NA" "1" "1" "NA" ...
+##  $ scan.b_external_id: chr  "Q008818.C008840.S000215.l.r.m2.c.lib.g.k.a.t" "Q008769.C008792.S000250.l.r.m.c.lib.g.k.a.t" "Q008568.C008577.S000424.l.r.m3.c.lib.g.k.a.t" "Q008909.C009000.S000084.l.r.m.c.lib.g.k.a.t" ...
+##  $ tumor_size        : chr  "9" "14" "27" "51" ...
+```
+
+```r
+ cat("geoAcc is unique - use as rownames:\n")
+```
+
+```
+## geoAcc is unique - use as rownames:
+```
+
+```r
+ with(sampDesc1, table(table(geoAcc, exclude=NULL)))
+```
+
+```
+## 
+##    1 
+## 3069
+```
+
+```r
+ rownames(sampDesc1) <- sampDesc1$geoAcc
+ 
+ cat("bioSample is unique:\n")
+```
+
+```
+## bioSample is unique:
+```
+
+```r
+ with(sampDesc1, table(table(bioSample, exclude=NULL)))
+```
+
+```
+## 
+##    1 
+## 3069
+```
+
+```r
+ cat("title is unique:\n")
+```
+
+```
+## title is unique:
+```
+
+```r
+ with(sampDesc1, table(table(title, exclude=NULL)))
+```
+
+```
+## 
+##    1 
+## 3069
+```
+
+```r
+ cat("Some Samples Match by sampNo:")
+```
+
+```
+## Some Samples Match by sampNo:
+```
+
+```r
+ with(sampDesc1, table(table(sampNo, exclude=NULL)))
+```
+
+```
+## 
+##    1    2 
+## 2883   93
+```
+
+```r
+ # NOTE: examination of the data indicate that sampNo cannot be used
+ # to match Blood with TU or TI samples
+```
+
+
+Read sample description file for second platform. 
+
+(Silently)
+
+
+Put the two together.
+
+
+
+```r
+ sampDesc <- rbind(sampDesc1, sampDesc2)
+
+ cat("geoAcc is unique - use as rownames:\n")
+```
+
+```
+## geoAcc is unique - use as rownames:
+```
+
+```r
+ with(sampDesc, table(table(geoAcc, exclude=NULL)))
+```
+
+```
+## 
+##    1 
+## 3409
+```
+
+```r
+ rownames(sampDesc) <- sampDesc$geoAcc
+
+ cat("bioSample is unique:\n")
+```
+
+```
+## bioSample is unique:
+```
+
+```r
+ with(sampDesc, table(table(bioSample, exclude=NULL)))
+```
+
+```
+## 
+##    1 
+## 3409
+```
+
+```r
+ cat("title is unique:\n")
+```
+
+```
+## title is unique:
+```
+
+```r
+ with(sampDesc, table(table(title, exclude=NULL)))
+```
+
+```
+## 
+##    1 
+## 3409
+```
+
+```r
+ cat("Some Samples Match by sampNo:\n")
+```
+
+```
+## Some Samples Match by sampNo:
+```
+
+```r
+ with(sampDesc, table(table(sampNo, exclude=NULL)))
+```
+
+```
+## 
+##    1    2 
+## 3137  136
+```
+
+```r
+ cat("Look at various summaries:\n")
+```
+
+```
+## Look at various summaries:
+```
+
+```r
+ cat("ageAtDx:\n")
+```
+
+```
+## ageAtDx:
+```
+
+```r
+ sampDesc$ageAtDx <- as.numeric(sampDesc$ageAtDx)
+ summary(sampDesc$ageAtDx)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   24.00   53.00   64.00   62.74   71.00   96.00
+```
+
+```r
+ cat("tumor_size:\n")
+```
+
+```
+## tumor_size:
+```
+
+```r
+ sampDesc$tumor_size <- as.numeric(sampDesc$tumor_size)
+```
+
+```
+## Warning: NAs introduced by coercion
+```
+
+```r
+ summary(sampDesc$tumor_size)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##    0.00   12.00   17.00   19.91   24.00  126.00      35
+```
+
+```r
+ cat("_treated:\n")
+```
+
+```
+## _treated:
+```
+
+```r
+ with(sampDesc, table(chemo_treated, endocrine_treated, exclude=NULL))
+```
+
+```
+##              endocrine_treated
+## chemo_treated    0    1   NA
+##            0   364 1653    0
+##            1   397  973    1
+##            NA    0    0   21
+```
+
+```r
+ cat("er status:\n")
+```
+
+```
+## er status:
+```
+
+```r
+ with(sampDesc, 
+ table(er_Status, 
+       paste0('SGC_', er_SGC, ':', 'MGC_', er_MGC), exclude=NULL)
+  )
+```
+
+```
+##          
+## er_Status SGC_0:MGC_0 SGC_1:MGC_0 SGC_1:MGC_1
+##        0          192          50          12
+##        1           65         181        2689
+##        NA         137          68          15
+```
+
+```r
+ cat("her2 status:\n")
+```
+
+```
+## her2 status:
+```
+
+```r
+ with(sampDesc, 
+ table(her2_Status, 
+       paste0('SGC_', her2_SGC, ':', 'MGC_', her2_MGC), exclude=NULL)
+  )
+```
+
+```
+##            
+## her2_Status SGC_0:MGC_0 SGC_0:MGC_1 SGC_1:MGC_0 SGC_1:MGC_1
+##          0         2708         116           7          12
+##          1          113          34          14         277
+##          NA         116           6           0           6
+```
+
+```r
+ cat("pgr status:\n")
+```
+
+```
+## pgr status:
+```
+
+```r
+ with(sampDesc,
+ table(pgr_Status,
+       paste0('SGC_', pgr_SGC, ':', 'MGC_', pgr_MGC), exclude=NULL)
+  )
+```
+
+```
+##           
+## pgr_Status SGC_0:MGC_0 SGC_0:MGC_1 SGC_1:MGC_0 SGC_1:MGC_1
+##         0          250          51          52          54
+##         1          103         111         140        2290
+##         NA         196          53          39          70
+```
+
+```r
+ cat("lymphNode:\n")
+```
+
+```
+## lymphNode:
+```
+
+```r
+ with(sampDesc, table(lymphNode_group, lymphNode_Status, exclude=NULL))
+```
+
+```
+##                lymphNode_Status
+## lymphNode_group   NA NodeNegative NodePositive
+##    1to3            0            0          897
+##    4toX            0            0          312
+##    NA            101            0            0
+##    NodeNegative    0         2027            0
+##    SubMicroMet     0           72            0
+```
+
+```r
+ cat("nhg:\n")
+```
+
+```
+## nhg:
+```
+
+```r
+ with(sampDesc, 
+ table(nhg,  nhg_MGC, exclude=NULL)
+  )
+```
+
+```
+##     nhg_MGC
+## nhg    G2   G3
+##   G1  494   11
+##   G2 1446  147
+##   G3  419  827
+##   NA   26   39
+```
+
+```r
+ cat("survival:\n")
+```
+
+```
+## survival:
+```
+
+```r
+ sampDesc$ovrallSurvDays <- as.numeric(sampDesc$ovrallSurvDays)
+ with(sampDesc, sapply(split(ovrallSurvDays,ovrallSurvEvent), summary))
+```
+
+```
+##                0        1
+## Min.      59.000   56.000
+## 1st Qu. 1281.750  633.000
+## Median  1648.000 1006.000
+## Mean    1656.299 1057.966
+## 3rd Qu. 2039.000 1445.000
+## Max.    2474.000 2408.000
+```
+
+```r
+ cat("pam50:\n")
+```
+
+```
+## pam50:
+```
+
+```r
+ with(sampDesc, table(ovrallSurvEvent,pam50_subtype, exclude=NULL))
+```
+
+```
+##                pam50_subtype
+## ovrallSurvEvent Basal Her2 LumA LumB Normal
+##               0   288  289 1589  681    209
+##               1    72   59  120   86     16
+```
+
+
+```r
+ DT::datatable(sampDesc,  options=list(pageLength = 18))
+```
+
+```
+## Warning in instance$preRenderHook(instance): It seems your data is too big
+## for client-side DataTables. You may consider server-side processing: https://
+## rstudio.github.io/DT/server.html
+```
+
+![plot of chunk DTsampDesc](figures/rdGEData/DTsampDesc-1.png)
+
+
+
+
+## Get Count Data
+
+
+There are too many samples in this dataset to store into a single count object.
+We will create X count matrices,,,, 
+
+<!-- IDEA
+We will instead read each vector and store to the file system as a separate 
+object.  Matrices will be assembled as needed.  
+-->
+
+
+### Read sequencing data 
+
+
+```r
+ ####,results='asis'}
+ suppressPackageStartupMessages(require(edgeR))
+
+ # get counts
+ counts_frm <- data.table::fread(COUNTS_FILE)
+
+ # get genes_annot
+ gtf_frm <- Rgb::read.gtf(GTF_FILE, attr = "split")
+
+ table(gtf_frm$feature)
+```
+
+```
+## 
+##         CDS        exon start_codon  stop_codon 
+##      627355      813681       67965       67912
+```
+
+```r
+ gtf_frm <- gtf_frm %>% 
+            dplyr::filter(feature == 'CDS') %>% 
+            dplyr::select(seqname:knownCanonicalClusterId)
+
+ #table(gtf_frm$knownCanonicalChrom)
+
+ gtf_frm <- dplyr::filter(gtf_frm, knownCanonicalChrom %in%
+  paste0('chr', c(1:22,'X','Y')))
+          
+ dim(gtf_frm)
+```
+
+```
+## [1] 193873     23
+```
+
+```r
+ genes_annot <- unique(dplyr::select(gtf_frm,
+    strand, gene_id, geneSymbol, knownToRefSeq:knownCanonicalChromEnd) )
+
+
+ gene_ndx <- match(counts_frm$V1, genes_annot$geneSymbol)
+ cat("Missing genes_annot for", sum(is.na(gene_ndx)), "rows in counts_frm.\n")
+```
+
+```
+## Missing genes_annot for 11073 rows in counts_frm.
+```
+
+```r
+ genes_annot <- merge(
+  data.frame(geneSymbol=counts_frm$V1),
+  genes_annot[setdiff(gene_ndx, NA),] ,
+  by='geneSymbol', all.x=T)
+
+ geneExpression <- counts_frm[, -1]
+ rownames(geneExpression) <- counts_frm[,1]
+
+ genes_annot <- genes_annot[match(rownames(geneExpression), genes_annot$geneSymbol),]
+ names(genes_annot) <-
+ sub('knownCanonicalChrom', 'chr',
+ sub('knownCanonicalChromStart', 'start',
+ sub('knownCanonicalChromEnd', 'end',
+ names(genes_annot))))
+```
+
+<!-- SKIP - don't want to deal with all the missingness
+### Add GC content to genes_annot
+-->
+
+
+

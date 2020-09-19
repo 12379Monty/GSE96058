@@ -174,20 +174,18 @@ Read sample description file for first platform.
 
 ```{r get-data-proc,cache=T, cach.vars=c('data_processing', 'GSEMatrix_obj'), eval=T, echo=T, fig.height=6, fig.width=11, eval=T}
 
-#### CLEAR CACHE
-
  GSEMatrix_obj <- GEOquery::getGEO(filename = SAMPLE_DESC_FILE1, GSEMatrix = T)
  show(GSEMatrix_obj)
 
- #DT::datatable(pData(phenoData(GSEMatrix_obj)))
+ #DT::datatable(Biobase::pData(Biobase::phenoData(GSEMatrix_obj)))
 
- KEY_FIELDS <- grep(':ch1$', names(pData(phenoData(GSEMatrix_obj))), value=T)
+ KEY_FIELDS <- grep(':ch1$', names(Biobase::pData(Biobase::phenoData(GSEMatrix_obj))), value=T)
  knitr::kable(KEY_FIELDS,
   caption='Key Fields') %>%
   kableExtra::kable_styling(full_width = F)
 
  # Data Processing
- data_processing <-  t(pData(phenoData(GSEMatrix_obj))[1,,drop=F] %>%
+ data_processing <-  t(Biobase::pData(Biobase::phenoData(GSEMatrix_obj))[1,,drop=F] %>%
   dplyr::select(starts_with('data_processing')))
  data_processing[,1] <- sub('data_processing.','',data_processing[,1] )
 
@@ -205,16 +203,16 @@ Read sample description file for first platform.
 ```{r readSampDesc1,cache=T, cach.vars=c('sampDesc1'), eval=T, echo=T, fig.height=6, fig.width=11}
 
 
- sampTitle_vec <- as.character(pData(phenoData(GSEMatrix_obj))[,"title"])
+ sampTitle_vec <- as.character(Biobase::pData(Biobase::phenoData(GSEMatrix_obj))[,"title"])
 
  sampRepl_vec <- grepl('repl$', sampTitle_vec)
 
 
  bioSamples_vec <- sapply(
- strsplit(as.character(pData(phenoData(GSEMatrix_obj))[,"relation"]), 
+ strsplit(as.character(Biobase::pData(Biobase::phenoData(GSEMatrix_obj))[,"relation"]), 
  split='/'), function(X) rev(X)[1])
 
- sampAttribs_frm <- pData(phenoData(GSEMatrix_obj)) %>%
+ sampAttribs_frm <- Biobase::pData(Biobase::phenoData(GSEMatrix_obj)) %>%
  dplyr::select(ends_with('ch1'))
  
  names(sampAttribs_frm) <- 
@@ -232,7 +230,7 @@ Read sample description file for first platform.
  names(sampAttribs_frm))))))))))))
 
  sampDesc1 <- data.frame(
-   geoAcc = pData(phenoData(GSEMatrix_obj))[,"geo_accession"],
+   geoAcc = Biobase::pData(Biobase::phenoData(GSEMatrix_obj))[,"geo_accession"],
    title = sampTitle_vec,
    isRepl = sampRepl_vec,
    sampNo = as.numeric(sub('F','',sub('repl','',sampTitle_vec))),
@@ -269,19 +267,19 @@ Read sample description file for second platform.
  GSEMatrix_obj <- GEOquery::getGEO(filename = SAMPLE_DESC_FILE2, GSEMatrix = T)
  show(GSEMatrix_obj)
 
- #DT::datatable(pData(phenoData(GSEMatrix_obj)))
+ #DT::datatable(Biobase::pData(Biobase::phenoData(GSEMatrix_obj)))
 
- KEY_FIELDS <- grep(':ch1$', names(pData(phenoData(GSEMatrix_obj))), value=T)
+ KEY_FIELDS <- grep(':ch1$', names(Biobase::pData(Biobase::phenoData(GSEMatrix_obj))), value=T)
  
- sampTitle_vec <- as.character(pData(phenoData(GSEMatrix_obj))[,"title"])
+ sampTitle_vec <- as.character(Biobase::pData(Biobase::phenoData(GSEMatrix_obj))[,"title"])
 
  sampRepl_vec <- grepl('repl$', sampTitle_vec)
 
  bioSamples_vec <- sapply(
- strsplit(as.character(pData(phenoData(GSEMatrix_obj))[,"relation"]), 
+ strsplit(as.character(Biobase::pData(Biobase::phenoData(GSEMatrix_obj))[,"relation"]), 
  split='/'), function(X) rev(X)[1])
 
- sampAttribs_frm <- pData(phenoData(GSEMatrix_obj)) %>%
+ sampAttribs_frm <- Biobase::pData(Biobase::phenoData(GSEMatrix_obj)) %>%
  dplyr::select(ends_with('ch1'))
  
  names(sampAttribs_frm) <- 
@@ -299,7 +297,7 @@ Read sample description file for second platform.
  names(sampAttribs_frm))))))))))))
 
  sampDesc2 <- data.frame(
-   geoAcc = pData(phenoData(GSEMatrix_obj))[,"geo_accession"],
+   geoAcc = Biobase::pData(Biobase::phenoData(GSEMatrix_obj))[,"geo_accession"],
    title = sampTitle_vec,
    isRepl = sampRepl_vec,
    sampNo = as.numeric(sub('F','',sub('repl','',sampTitle_vec))),
@@ -421,7 +419,7 @@ object.  Matrices will be assembled as needed.
 
 ### Read sequencing data 
 
-```{r  get-counts, eval=T, cache=T, cache.vars=c('featureCount', 'genes_annot'),message=F}
+```{r  get-counts, eval=T, cache=T, cache.vars=c('geneExpression', 'genes_annot'),message=F}
  ####,results='asis'}
  suppressPackageStartupMessages(require(edgeR))
 
@@ -456,10 +454,10 @@ object.  Matrices will be assembled as needed.
   genes_annot[setdiff(gene_ndx, NA),] ,
   by='geneSymbol', all.x=T)
 
- featureCount <- counts_frm[, -1]
- rownames(featureCount) <- counts_frm[,1]
+ geneExpression <- counts_frm[, -1]
+ rownames(geneExpression) <- counts_frm[,1]
 
- genes_annot <- genes_annot[match(rownames(featureCount), genes_annot$geneSymbol),]
+ genes_annot <- genes_annot[match(rownames(geneExpression), genes_annot$geneSymbol),]
  names(genes_annot) <-
  sub('knownCanonicalChrom', 'chr',
  sub('knownCanonicalChromStart', 'start',
@@ -497,105 +495,88 @@ subsets balanced according to `pam50_subtype`.  The reason for
 save these into separate tables is dur to github file size constraints.
 
 
-```{r save, cache=T, cache.vars='',eval=F}
- # THIS DOESNT WORK
- #usethis::use_data(get(paste0(GSE_ID, '_sampDesc')), overwrite=T)
+```{r save, cache=T, cache.vars='',eval=T}
+# THIS DOESNT WORK
+#usethis::use_data(get(paste0(GSE_ID, '_sampDesc')), overwrite=T)
 
 
- # save sampDesc
- save(list='sampDesc', file=file.path(data_DIR, 'sampDesc.rda'),
-   compress='xz')
+# separate the counts into
+# repl_1
+# repl_2 (the 'F*repl$' samples)
+# and the rest into 4 sample sets, balanced by PAM50 subtype
 
- # separate the counts into
- # repl_1
- # repl_2 (the 'F*repl$' samples)
- # and the rest into 4 sample sets, balanced by PAM50 subtype
+repl2_ndx <- grep('repl$', colnames(geneExpression))
+geneExpression_repl2 <- geneExpression[, repl2_ndx]
+geneExpression <- geneExpression[, -repl2_ndx]
+rm(repl2_ndx)
 
- repl2_ndx <- grep('repl$', colnames(featureCount))
- featureCount_repl2 <- featureCount[, repl2_ndx]
- featureCount <- featureCount[, -repl2_ndx]
- rm(repl2_ndx)
+repl1_ndx <- match(sub('repl$', '', colnames(geneExpression_repl2)),
+  colnames(geneExpression))
+geneExpression_repl1 <- geneExpression[, repl1_ndx]
+geneExpression <- geneExpression[, -repl1_ndx]
+rm(repl1_ndx)
 
- repl1_ndx <- match(sub('repl$', '', colnames(featureCount_repl2)),
-   colnames(featureCount))
- featureCount_repl1 <- featureCount[, repl1_ndx]
- featureCount <- featureCount[, -repl1_ndx]
- rm(repl1_ndx)
+# save repl counts
+save(list='geneExpression_repl1', file=file.path(data_DIR, 'geneExpression_repl1.rda'),
+  compress='xz')
 
- # save repl counts
- save(list='featureCount_repl1', file=file.path(data_DIR, 'featureCount_repl1.rda'),
-   compress='xz')
- save(list='featureCount_repl2', file=file.path(data_DIR, 'featureCount_repl2.rda'),
-   compress='xz')
+save(list='geneExpression_repl2', file=file.path(data_DIR, 'geneExpression_repl2.rda'),
+  compress='xz')
 
 
- # divide the rest into 5 groups - 
- sample_ndx <- match(colnames(featureCount), sampDesc$title)
- with(sampDesc[sample_ndx, ], table(pam50_subtype, exclude=NULL))
+# divide the rest into 5 groups - 
+sample_ndx <- match(colnames(geneExpression), sampDesc$title)
+with(sampDesc[sample_ndx, ], table(pam50_subtype, exclude=NULL))
 
- set.seed(1)
- foldid_vec <- caret::createFolds(
- factor(sampDesc[sample_ndx, "pam50_subtype"]),
- k=5,
- list=F)
+set.seed(1)
+foldid_vec <- caret::createFolds(
+factor(sampDesc[sample_ndx, "pam50_subtype"]),
+k=5,
+list=F)
 
- fold_samples_lst <- split(sampDesc[sample_ndx, "title"], foldid_vec)
- 
- for(JJ in 1:length(fold_samples_lst)){
-  sub_ndx <- match(fold_samples_lst[[JJ]], colnames(featureCount))
-  assign(paste0('featureCount_sub',JJ), featureCount[, sub_ndx])
-  featureCount <- featureCount[, -sub_ndx]
+fold_samples_lst <- split(sampDesc[sample_ndx, "title"], foldid_vec)
 
-   save(list=paste0('featureCount_sub',JJ,'.rda'), 
-   file=file.path(data_DIR, paste0('featureCount_sub',JJ)),
-   compress='xz')
+for(JJ in 1:length(fold_samples_lst)){
+ sub_ndx <- match(fold_samples_lst[[JJ]], colnames(geneExpression))
+ assign(paste0('geneExpression_sub',JJ), geneExpression[, sub_ndx])
+ geneExpression <- geneExpression[, -sub_ndx]
 
- } 
+  save(list=paste0('geneExpression_sub',JJ), 
+  file=file.path(data_DIR, paste0('geneExpression_sub',JJ, '.rda')),
+  compress='xz')
 
-
- if(ncol(featureCount)) stop("Oh, oh - featureCount should now be empty!!!!")
+} 
 
 
-  
-```
- 
-```{r save-genes_annot, cache=T, cache.vars='',eval=F}
- # should be saved with the rest but forgot...
+if(ncol(geneExpression)) stop("Oh, oh - geneExpression should now be empty!!!!")
 
- # save genes_annot
- save(list='genes_annot', file=file.path(data_DIR, 'genes_annot.rda'),
-   compress='xz')
-
-```
-
-After thought ... add featureCount table membership to sampDesc
-```{r , include=F}
-library(GSE96058)
-```
-
-```{r add-countData-to-sampDesc, cache=T, cache.vars=''}
-
-sample_feature_table_vec <- with(sampDesc,
-ifelse(title %in% colnames(featureCount_repl1), 'repl1',
-ifelse(title %in% colnames(featureCount_repl2), 'repl2',
-ifelse(title %in% colnames(featureCount_sub1), 'sub1',
-ifelse(title %in% colnames(featureCount_sub2), 'sub2',
-ifelse(title %in% colnames(featureCount_sub3), 'sub3',
-ifelse(title %in% colnames(featureCount_sub4), 'sub4',
-ifelse(title %in% colnames(featureCount_sub5), 'sub5',
+# Add gene expression table info to sampDesc
+sample_geneExpression_table_vec <- with(sampDesc,
+ifelse(title %in% colnames(geneExpression_repl1), 'repl1',
+ifelse(title %in% colnames(geneExpression_repl2), 'repl2',
+ifelse(title %in% colnames(geneExpression_sub1), 'sub1',
+ifelse(title %in% colnames(geneExpression_sub2), 'sub2',
+ifelse(title %in% colnames(geneExpression_sub3), 'sub3',
+ifelse(title %in% colnames(geneExpression_sub4), 'sub4',
+ifelse(title %in% colnames(geneExpression_sub5), 'sub5',
 'ERROR'))))))))
 
-table(sample_feature_table_vec)
+table(sample_geneExpression_table_vec)
 
-sampDesc <- data.frame(countTable=sample_feature_table_vec, sampDesc)
+sampDesc <- data.frame(countTable=sample_geneExpression_table_vec, sampDesc)
 
 
 # save sampDesc
 save(list='sampDesc', file=file.path(data_DIR, 'sampDesc.rda'),
+  compress='xz')
+  
+
+# save genes_annot
+save(list='genes_annot', file=file.path(data_DIR, 'genes_annot.rda'),
    compress='xz')
 
-
 ```
+
 
 
 

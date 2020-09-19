@@ -275,12 +275,13 @@
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">magrittr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">GSE96058</span>)
 
-<span class="kw">ER_PR_HER2_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span>(<span class="kw">sampDesc</span> <span class="op">%&gt;%</span> <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="op">!</span><span class="kw">isRepl</span>), 
+<span class="kw">ER_PR_HER2_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span>(<span class="kw">sampDesc</span> <span class="op">%&gt;%</span> 
+ <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="op">!</span><span class="kw">isRepl</span> <span class="op">&amp;</span> <span class="kw">er_Status</span>!=<span class="st">'NA'</span>  <span class="op">&amp;</span> <span class="kw">pgr_Status</span>!=<span class="st">'NA'</span> <span class="op">&amp;</span> <span class="kw">her2_Status</span>!=<span class="st">'NA'</span>),
  <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span>(ER_PR_HER2=<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="kw">er_Status</span>, <span class="kw">pgr_Status</span>, <span class="kw">her2_Status</span>, sep=<span class="st">'_'</span>),
   exclude=<span class="kw">NULL</span>)
- )))
+ )
 
- <span class="kw">knitr</span>::<span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span>(<span class="kw">ER_PR_HER2_tbl</span>)),
+ <span class="kw">knitr</span>::<span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="kw">ER_PR_HER2_tbl</span>,
   caption=<span class="st">"ER, PR and HER2 Status"</span>)  <span class="op">%&gt;%</span>
   <span class="kw">kableExtra</span>::<span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span>(full_width = <span class="kw">F</span>)
 </pre></div>
@@ -288,6 +289,14 @@
 <caption>
 <p>ER, PR and HER2 Status</p>
 </caption>
+<thead><tr>
+<th style="text-align:left;">
+<p>ER_PR_HER2</p>
+</th>
+<th style="text-align:right;">
+<p>Freq</p>
+</th>
+</tr></thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
@@ -303,14 +312,6 @@
 </td>
 <td style="text-align:right;">
 <p>56</p>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<p>0_0_NA</p>
-</td>
-<td style="text-align:right;">
-<p>12</p>
 </td>
 </tr>
 <tr>
@@ -331,22 +332,6 @@
 </tr>
 <tr>
 <td style="text-align:left;">
-<p>0_1_NA</p>
-</td>
-<td style="text-align:right;">
-<p>1</p>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<p>0_NA_1</p>
-</td>
-<td style="text-align:right;">
-<p>1</p>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 <p>1_0_0</p>
 </td>
 <td style="text-align:right;">
@@ -363,14 +348,6 @@
 </tr>
 <tr>
 <td style="text-align:left;">
-<p>1_0_NA</p>
-</td>
-<td style="text-align:right;">
-<p>5</p>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 <p>1_1_0</p>
 </td>
 <td style="text-align:right;">
@@ -383,78 +360,6 @@
 </td>
 <td style="text-align:right;">
 <p>232</p>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<p>1_1_NA</p>
-</td>
-<td style="text-align:right;">
-<p>90</p>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<p>1_NA_0</p>
-</td>
-<td style="text-align:right;">
-<p>101</p>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<p>1_NA_1</p>
-</td>
-<td style="text-align:right;">
-<p>34</p>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<p>1_NA_NA</p>
-</td>
-<td style="text-align:right;">
-<p>2</p>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<p>NA_1_0</p>
-</td>
-<td style="text-align:right;">
-<p>2</p>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<p>NA_1_1</p>
-</td>
-<td style="text-align:right;">
-<p>3</p>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<p>NA_NA_0</p>
-</td>
-<td style="text-align:right;">
-<p>139</p>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<p>NA_NA_1</p>
-</td>
-<td style="text-align:right;">
-<p>44</p>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<p>NA_NA_NA</p>
-</td>
-<td style="text-align:right;">
-<p>12</p>
 </td>
 </tr>
 </tbody>
@@ -591,6 +496,7 @@
 </tr>
 </tbody>
 </table>
+<p><br></p>
 <p>Similarly for PGR, HER2 and ki67.</p>
 <p><br></p>
 </div>
@@ -601,7 +507,6 @@
 <li>The GSE58135 dataset contains treatment and survival data</li>
 </ul>
 <!-- end list --><div class="sourceCode" id="cb6"><pre class="downlit">
- <span class="co">###, fig.cap="Survival Days vs chemo_treated*ovrallSurvEvent"}</span>
 
 <span class="kw">chemo_surv_lst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span>(<span class="kw">sampDesc</span> <span class="op">%&gt;%</span> <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">chemo_treated</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'0'</span>,<span class="st">'1'</span>)),
   <span class="fu"><a href="https://rdrr.io/r/base/split.html">split</a></span>(<span class="kw">ovrallSurvDays</span>, 
@@ -614,7 +519,6 @@
 <p><img src="reference/figures/README-chemo-survival-1.png" width="100%"></p>
 <p>Can similarly examine survival vs endocrine_treated.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit">
- <span class="co">###, fig.cap="Survival Days vs endocrine_treated*ovrallSurvEvent",eval=F, echo=F}</span>
 
 <span class="kw">endocrine_surv_lst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span>(<span class="kw">sampDesc</span> <span class="op">%&gt;%</span> <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">endocrine_treated</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'0'</span>,<span class="st">'1'</span>)),
   <span class="fu"><a href="https://rdrr.io/r/base/split.html">split</a></span>(<span class="kw">ovrallSurvDays</span>, 
@@ -634,7 +538,6 @@
 <li>GSE96058 has PAM50 subtypung information - see data processing above. Samples were distributed across different count tables in order to meet github file size constraints. This allocation was done to keep the PAM50 score distribution constant.</li>
 </ul>
 <!-- end list --><div class="sourceCode" id="cb8"><pre class="downlit">
- <span class="co">###, fig.cap="Sapmple PAM subtype vs Count Table" }</span>
 
 <span class="kw">pam50_byTable_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span>(<span class="kw">sampDesc</span>,
  <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span>(<span class="kw">pam50_subtype</span>, <span class="kw">countTable</span>))
@@ -646,7 +549,6 @@
 <p>Let’s examine how counts cluster for one of the subsets.</p>
 <p>First look at coverage, ordered by sample ID (sometimes a proxy for processing time effects)</p>
 <div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="co">###, fig.cap="Coverage for repl1 samples ordered by bioSample ID"}</span>
 <span class="kw">KellyColors.vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
   <span class="st">"#222222"</span>, <span class="st">"#F3C300"</span>, <span class="st">"#875692"</span>, <span class="st">"#F38400"</span>, <span class="st">"#A1CAF1"</span>,
   <span class="st">"#BE0032"</span>, <span class="st">"#C2B280"</span>, <span class="st">"#848482"</span>, <span class="st">"#008856"</span>, <span class="st">"#E68FAC"</span>, <span class="st">"#0067A5"</span>,
@@ -685,7 +587,6 @@
 </pre></div>
 <p><img src="reference/figures/README-bxp-repl1-1.png" width="100%"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="co">###, fig.cap="Coverage densities for repl1 samples"}</span>
 
 <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(mfcol = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">1</span>), mar = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span>), oma = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">0</span>))
 
@@ -709,7 +610,6 @@
 <p><img src="reference/figures/README-density-repl1-1.png" width="100%"></p>
 <p>FPKM of zero looks like a good place to separate expressed from weakly expressed genes. Apply this filter, requiring at a gene to be epxressed beyond this nominal value in at least 10 samples to be considered for this analysis.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit">
-   <span class="co">### , fig.cap="Filtered Coverage for repl1 samples orderd bi bioSample ID"}</span>
 
 <span class="kw">weak.flg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span>(<span class="kw">featureCount_repl1</span> <span class="op">&gt;</span> <span class="fl">0</span>)  <span class="op">&lt;</span> <span class="fl">10</span>
 
@@ -736,7 +636,6 @@
 </pre></div>
 <p><img src="reference/figures/README-bxp-repl1-filtered-1.png" width="100%"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit">
-   <span class="co">### , fig.cap='MDS plots filtered coverage in repl1 samples', echo=T}</span>
 
 <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(mfcol = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">2</span>), mar = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">2</span>, <span class="fl">1</span>), xpd = <span class="fl">NA</span>, oma = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">0</span>))
 

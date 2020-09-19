@@ -1,151 +1,79 @@
-<!-- TO DO - Styling
-
-formatR::tidy_dir("R")
-# or
-lintr::lint_package()
-
-save to preTidy first to compare
-
--->
+# THIS DOESNT WORK
+#usethis::use_data(get(paste0(GSE_ID, '_sampDesc')), overwrite=T)
 
 
+# separate the counts into
+# repl_1
+# repl_2 (the 'F*repl$' samples)
+# and the rest into 4 sample sets, balanced by PAM50 subtype
 
-```{r GlobalOptions, results="hide", include=FALSE, cache=FALSE}
-knitr::opts_knit$set(stop_on_error = 2L) #really make it stop
-#knitr::dep_auto()
- options(knitr.table.format = 'html')
+repl2_ndx <- grep('repl$', colnames(geneExpression))
+geneExpression_repl2 <- geneExpression[, repl2_ndx]
+geneExpression <- geneExpression[, -repl2_ndx]
+rm(repl2_ndx)
 
-```
-<!-- ######################################################################## -->
+repl1_ndx <- match(sub('repl$', '', colnames(geneExpression_repl2)),
+  colnames(geneExpression))
+geneExpression_repl1 <- geneExpression[, repl1_ndx]
+geneExpression <- geneExpression[, -repl1_ndx]
+rm(repl1_ndx)
 
+# save repl counts
+save(list='geneExpression_repl1', file=file.path(data_DIR, 'geneExpression_repl1.rda'),
+  compress='xz')
 
-```{r Prelims, include=FALSE, echo=FALSE, results='hide', message=FALSE,cache=F}
-
- FN <- "getGSEData"
-if(sum(grepl(FN, list.files()))==0) stop("Check FN")
-
- PREFIX <- ""
-
- suppressPackageStartupMessages(require(methods))
- suppressPackageStartupMessages(require(rmarkdown))
- suppressPackageStartupMessages(require(bookdown))
-
- suppressPackageStartupMessages(require(knitr))
- options(stringsAsFactors=F)
-
- suppressPackageStartupMessages(require(data.table)) 
- options(datatable.fread.datatable=F)
-
- suppressPackageStartupMessages(require(plyr))
- suppressPackageStartupMessages(require(dplyr))
- suppressPackageStartupMessages(require(magrittr))
-
- # Shotcuts for knitting and redering while in R session (Invoke interactive R from R/Scripts folder)
- kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
-       output=paste(FN,".html", sep=''))
-
- rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
-       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
-
- bb <- function(n='') browseURL(paste(FN,".html", sep=''))
-
- # The usual shotcuts
- zz <- function(n='') source(paste("t", n, sep=''))
-
- # Using relative paths:
- # Assuming script is run from GSE96058/data-raw/
- WRKDIR <- ('..')
-
- # Not needed if path is relative ...
- if(!file.exists(WRKDIR)) stop("WRKDIR ERROR: ", WRKDIR)
-
- # do once
- #setwd(WRKDIR)
-
- # file rmarkdown file management options: cache, figures
- cache_DIR <- file.path('cache/rdGEData/')
- suppressPackageStartupMessages(dir.create(cache_DIR, recursive=T))
- opts_chunk$set(cache.path=cache_DIR)
-
- figure_DIR <- file.path('figures/rdGEData/')
- suppressPackageStartupMessages(dir.create(figure_DIR, recursive=T))
- opts_chunk$set(fig.path=paste0(figure_DIR, PREFIX))
-
- data_DIR <- '../data'
- if(!file.exists(data_DIR)) stop("data_DIR ERROR: ", data_DIR)
+save(list='geneExpression_repl2', file=file.path(data_DIR, 'geneExpression_repl2.rda'),
+  compress='xz')
 
 
-```
-<!-- ######################################################################## -->
+# divide the rest into 5 groups - 
+sample_ndx <- match(colnames(geneExpression), sampDesc$title)
+with(sampDesc[sample_ndx, ], table(pam50_subtype, exclude=NULL))
+
+set.seed(1)
+foldid_vec <- caret::createFolds(
+factor(sampDesc[sample_ndx, "pam50_subtype"]),
+k=5,
+list=F)
+
+fold_samples_lst <- split(sampDesc[sample_ndx, "title"], foldid_vec)
+
+for(JJ in 1:length(fold_samples_lst)){
+ sub_ndx <- match(fold_samples_lst[[JJ]], colnames(geneExpression))
+ assign(paste0('geneExpression_sub',JJ,'.rda'), geneExpression[, sub_ndx])
+ geneExpression <- geneExpression[, -sub_ndx]
+
+  save(list=paste0('geneExpression_sub',JJ,'.rda'), 
+  file=file.path(data_DIR, paste0('geneExpression_sub',JJ, '.rda')),
+  compress='xz')
+
+} 
 
 
-*** 
+if(ncol(geneExpression)) stop("Oh, oh - geneExpression should now be empty!!!!")
 
-# Abstract
+# Add gene expression table info to sampDesc
+sample_geneExpression_table_vec <- with(sampDesc,
+ifelse(title %in% colnames(geneExpression_repl1), 'repl1',
+ifelse(title %in% colnames(geneExpression_repl2), 'repl2',
+ifelse(title %in% colnames(geneExpression_sub1), 'sub1',
+ifelse(title %in% colnames(geneExpression_sub2), 'sub2',
+ifelse(title %in% colnames(geneExpression_sub3), 'sub3',
+ifelse(title %in% colnames(geneExpression_sub4), 'sub4',
+ifelse(title %in% colnames(geneExpression_sub5), 'sub5',
+'ERROR'))))))))
 
-This script assembles R object from data downloaded from 
-[NCBI/Gene Expression Omnibus Database (GSE96058)](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058).
-The R objects will be assembled into an R data package for
-easy access.  The objects are constructed to parallel the
-analyses of these data as reported in
-Brueffer et al. (2018) [@Brueffer:2018aa]. 
+table(sample_geneExpression_table_vec)
+
+sampDesc <- data.frame(countTable=sample_geneExpression_table_vec, sampDesc)
 
 
+# save sampDesc
+save(list='sampDesc', file=file.path(data_DIR, 'sampDesc.rda'),
+  compress='xz')
+  
 
-# Set Analysis Parameters
- 
-```{r setAnalysisParameters, echo=T, cache=F}
-
- GSE_ID <- 'GSE96058'
-
- # extData
- ################################
- if(file.exists(file.path('../../extData'))) 
- EXT_DIR <- file.path('../../extData') else stop("Speficy EXT_DIR")
-
- # GSE_Data
- ###################################
- if(file.exists(file.path(EXT_DIR, GSE_ID)))
- GSE_DATA_DIR <- file.path(EXT_DIR,GSE_ID) else stop("Speficy GSE_DATA_DIR")
-
- # SampleDesc-1: GPL11154 (Illumina HiSeq 2000)
- ###################################
- GPL_ID1 <- 'GPL11154'
- if(file.exists(file.path(GSE_DATA_DIR, paste0(GSE_ID,'-',GPL_ID1,'_series_matrix.txt'))))
- SAMPLE_DESC_FILE1 <- file.path(GSE_DATA_DIR, paste0(GSE_ID,'-',GPL_ID1,'_series_matrix.txt')) else 
- stop("Speficy SAMPLE_DESC_FILE1")
- 
- # SampleDesc-2: GPL18573 (Illumina NextSeq 500)
- ###################################
- GPL_ID2 <- 'GPL18573'
- if(file.exists(file.path(GSE_DATA_DIR, paste0(GSE_ID,'-',GPL_ID2,'_series_matrix.txt'))))
- SAMPLE_DESC_FILE2 <- file.path(GSE_DATA_DIR, paste0(GSE_ID,'-',GPL_ID2,'_series_matrix.txt')) else 
- stop("Speficy SAMPLE_DESC_FILE2")
-
- # gtf
- ###################################
- LONG_NAME <- "GSE96058_UCSC_hg38_knownGenes_22sep2014.gtf.gz"
- if(file.exists(file.path(GSE_DATA_DIR, LONG_NAME)))
- GTF_FILE <- file.path(GSE_DATA_DIR, LONG_NAME) else
- stop("Speficy GTF_FILE")
-
- # Counts
- ###################################
- LONG_NAME <- "GSE96058_gene_expression_3273_samples_and_136_replicates_transformed.csv.gz"
- if(file.exists(file.path(GSE_DATA_DIR, LONG_NAME)))
- COUNTS_FILE <- file.path(GSE_DATA_DIR, LONG_NAME) else
- stop("Speficy COUNTS_FILE")
-
- 
-```
-
-Define some utility functions.  
- 
-
-## Get Sample Description Data
-
-There are two sample description files corresponding to the two platforms
-used: GPL11154 (Illumina HiSeq 2000) and  GPL18573 (Illumina NextSeq 500) 
-
-Read sample description file for first platform.
+# save genes_annot
+save(list='genes_annot', file=file.path(data_DIR, 'genes_annot.rda'),
+   compress='xz')
 

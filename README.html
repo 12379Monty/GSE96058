@@ -614,11 +614,11 @@ body {
 <li><p>The data in NCBI GEO <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058">Series GSE96058</a> does not contain any of the training samples discussed in the Brueffer et al. (2018) [<a href="#ref-Brueffer:2018aa">1</a>] paper. This package therefore only contains samples from the prospective population-based series of 3,273 BCs.</p></li>
 <li><p>The gene expression data are stored in several tables due to github file size restrictions:</p>
 <ul>
-<li>featureCount_repl1, featureCount_repl2: 30865 x 136 tables of counts for replicated samples</li>
-<li>featureCount_sub1-_sub5: 30865 x 626-629 tables of counts for random subsets of samples, balanced over pam scores.</li>
+<li>geneExpression_repl1, geneExpression_repl2: 30865 x 136 tables of counts for replicated samples</li>
+<li>geneExpression_sub1-_sub5: 30865 x 626-629 tables of counts for random subsets of samples, balanced over pam scores.</li>
 </ul></li>
-<li><p>We use <code>featureCount</code> although the gene coverage measures stored in the GEO data set are <code>FPKM</code> estimates of gene expression.</p></li>
 </ul>
+<p>For a description of <code>geneExpression</code> see <strong>GSE96058_Data_Processing</strong> below.</p>
 <br />
 
 <h2 id="installation">Installation</h2>
@@ -665,26 +665,12 @@ body {
 
 <td style="text-align:left;">
 
-<p>featureCount_repl1</p>
+<p>geneExpression_repl1</p>
 </td>
 
 <td style="text-align:left;">
 
-<p>A matrix of feature counts for replicated samples - replicate 1</p>
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-<p>featureCount_repl2</p>
-</td>
-
-<td style="text-align:left;">
-
-<p>A matrix of feature counts for replicated samples - replicate 2</p>
+<p>A matrix of gene expression for replicated samples - replicate 1</p>
 </td>
 
 </tr>
@@ -693,26 +679,12 @@ body {
 
 <td style="text-align:left;">
 
-<p>featureCount_sub1</p>
+<p>geneExpression_repl2</p>
 </td>
 
 <td style="text-align:left;">
 
-<p>A matrix of feature counts for a random subset of samples balanced according to pam50 category</p>
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-<p>featureCount_sub2</p>
-</td>
-
-<td style="text-align:left;">
-
-<p>A matrix of feature counts for a random subset of samples balanced according to pam50 category</p>
+<p>A matrix of gene expression for replicated samples - replicate 2</p>
 </td>
 
 </tr>
@@ -721,26 +693,12 @@ body {
 
 <td style="text-align:left;">
 
-<p>featureCount_sub3</p>
+<p>geneExpression_sub1</p>
 </td>
 
 <td style="text-align:left;">
 
-<p>A matrix of feature counts for a random subset of samples balanced according to pam50 category</p>
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-<p>featureCount_sub4</p>
-</td>
-
-<td style="text-align:left;">
-
-<p>A matrix of feature counts for a random subset of samples balanced according to pam50 category</p>
+<p>A matrix of gene expression for a random subset of samples balanced according to pam50 category</p>
 </td>
 
 </tr>
@@ -749,12 +707,54 @@ body {
 
 <td style="text-align:left;">
 
-<p>featureCount_sub5</p>
+<p>geneExpression_sub2</p>
 </td>
 
 <td style="text-align:left;">
 
-<p>A matrix of feature counts for a random subset of samples balanced according to pam50 category</p>
+<p>A matrix of gene expression for a random subset of samples balanced according to pam50 category</p>
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+<p>geneExpression_sub3</p>
+</td>
+
+<td style="text-align:left;">
+
+<p>A matrix of gene expression for a random subset of samples balanced according to pam50 category</p>
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+<p>geneExpression_sub4</p>
+</td>
+
+<td style="text-align:left;">
+
+<p>A matrix of gene expression for a random subset of samples balanced according to pam50 category</p>
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+<p>geneExpression_sub5</p>
+</td>
+
+<td style="text-align:left;">
+
+<p>A matrix of gene expression for a random subset of samples balanced according to pam50 category</p>
 </td>
 
 </tr>
@@ -1285,6 +1285,8 @@ body {
 
 </table>
 
+<br />
+
 <p>Similarly for PGR, HER2 and ki67.</p>
 <br />
 
@@ -1345,18 +1347,18 @@ body {
 <span id="cb9-10"><a href="#cb9-10"></a>pamCol_vec &lt;-<span class="st"> </span>col_vec[<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(pamVal_vec)]</span>
 <span id="cb9-11"><a href="#cb9-11"></a><span class="kw">names</span>(pamCol_vec) &lt;-<span class="st"> </span>pamVal_vec</span>
 <span id="cb9-12"><a href="#cb9-12"></a></span>
-<span id="cb9-13"><a href="#cb9-13"></a>sampDesc_repl1 &lt;-<span class="st"> </span>sampDesc[<span class="kw">match</span>(<span class="kw">colnames</span>(featureCount_repl1), sampDesc<span class="op">$</span>title),]</span>
+<span id="cb9-13"><a href="#cb9-13"></a>sampDesc_repl1 &lt;-<span class="st"> </span>sampDesc[<span class="kw">match</span>(<span class="kw">colnames</span>(geneExpression_repl1), sampDesc<span class="op">$</span>title),]</span>
 <span id="cb9-14"><a href="#cb9-14"></a></span>
 <span id="cb9-15"><a href="#cb9-15"></a>o.v &lt;-<span class="st"> </span><span class="kw">order</span>(sampDesc_repl1<span class="op">$</span>bioSample)</span>
 <span id="cb9-16"><a href="#cb9-16"></a></span>
 <span id="cb9-17"><a href="#cb9-17"></a>sampDesc_repl1 &lt;-<span class="st"> </span>sampDesc_repl1[o.v,]</span>
-<span id="cb9-18"><a href="#cb9-18"></a>featureCount_repl1 &lt;-<span class="st"> </span>featureCount_repl1[, o.v]</span>
+<span id="cb9-18"><a href="#cb9-18"></a>geneExpression_repl1 &lt;-<span class="st"> </span>geneExpression_repl1[, o.v]</span>
 <span id="cb9-19"><a href="#cb9-19"></a><span class="kw">rm</span>(o.v)</span>
 <span id="cb9-20"><a href="#cb9-20"></a></span>
 <span id="cb9-21"><a href="#cb9-21"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>), <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>))</span>
 <span id="cb9-22"><a href="#cb9-22"></a></span>
 <span id="cb9-23"><a href="#cb9-23"></a><span class="co"># AqNPATisMix outline=T for LBO</span></span>
-<span id="cb9-24"><a href="#cb9-24"></a><span class="kw">boxplot</span>(featureCount_repl1,</span>
+<span id="cb9-24"><a href="#cb9-24"></a><span class="kw">boxplot</span>(geneExpression_repl1,</span>
 <span id="cb9-25"><a href="#cb9-25"></a>  <span class="dt">add =</span> F,</span>
 <span id="cb9-26"><a href="#cb9-26"></a>  <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>), </span>
 <span id="cb9-27"><a href="#cb9-27"></a>  <span class="dt">staplewex =</span> <span class="dv">0</span>, <span class="co"># remove horizontal whisker lines</span></span>
@@ -1374,15 +1376,15 @@ body {
 <span id="cb10-2"><a href="#cb10-2"></a><span class="kw">par</span>(<span class="dt">mfcol =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">0</span>))</span>
 <span id="cb10-3"><a href="#cb10-3"></a></span>
 <span id="cb10-4"><a href="#cb10-4"></a></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="kw">plot</span>(<span class="kw">density</span>(featureCount_repl1[, <span class="dv">1</span>]),</span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="kw">plot</span>(<span class="kw">density</span>(geneExpression_repl1[, <span class="dv">1</span>]),</span>
 <span id="cb10-6"><a href="#cb10-6"></a>  <span class="dt">col =</span> pamCol_vec[sampDesc_repl1<span class="op">$</span>pam50_subtype[<span class="dv">1</span>]],</span>
 <span id="cb10-7"><a href="#cb10-7"></a>  <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, </span>
 <span id="cb10-8"><a href="#cb10-8"></a>  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">7</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">.4</span>), <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span></span>
 <span id="cb10-9"><a href="#cb10-9"></a>)</span>
 <span id="cb10-10"><a href="#cb10-10"></a><span class="kw">title</span>(<span class="st">&quot;Coverage densities for repl1 samples&quot;</span>)</span>
 <span id="cb10-11"><a href="#cb10-11"></a></span>
-<span id="cb10-12"><a href="#cb10-12"></a><span class="cf">for</span> (JJ <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(featureCount_repl1)) {</span>
-<span id="cb10-13"><a href="#cb10-13"></a>  den &lt;-<span class="st"> </span><span class="kw">density</span>(featureCount_repl1[, JJ])</span>
+<span id="cb10-12"><a href="#cb10-12"></a><span class="cf">for</span> (JJ <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(geneExpression_repl1)) {</span>
+<span id="cb10-13"><a href="#cb10-13"></a>  den &lt;-<span class="st"> </span><span class="kw">density</span>(geneExpression_repl1[, JJ])</span>
 <span id="cb10-14"><a href="#cb10-14"></a>  <span class="kw">lines</span>(den<span class="op">$</span>x, den<span class="op">$</span>y,</span>
 <span id="cb10-15"><a href="#cb10-15"></a>    <span class="dt">col =</span> pamCol_vec[sampDesc_repl1<span class="op">$</span>pam50_subtype[JJ]],</span>
 <span id="cb10-16"><a href="#cb10-16"></a>    <span class="dt">lty =</span> <span class="dv">1</span>)</span>
@@ -1393,7 +1395,7 @@ body {
 
 <p>FPKM of zero looks like a good place to separate expressed from weakly expressed genes. Apply this filter, requiring at a gene to be epxressed beyond this nominal value in at least 10 samples to be considered for this analysis.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a></span>
-<span id="cb11-2"><a href="#cb11-2"></a>weak.flg &lt;-<span class="st"> </span><span class="kw">rowSums</span>(featureCount_repl1 <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)  <span class="op">&lt;</span><span class="st"> </span><span class="dv">10</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>weak.flg &lt;-<span class="st"> </span><span class="kw">rowSums</span>(geneExpression_repl1 <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)  <span class="op">&lt;</span><span class="st"> </span><span class="dv">10</span></span>
 <span id="cb11-3"><a href="#cb11-3"></a></span>
 <span id="cb11-4"><a href="#cb11-4"></a><span class="kw">cat</span>(<span class="st">&quot;Excluding&quot;</span>, <span class="kw">round</span>(<span class="dv">100</span><span class="op">*</span><span class="kw">mean</span>(weak.flg),<span class="dv">1</span>), <span class="st">&quot;percent of genes.</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb11-5"><a href="#cb11-5"></a><span class="co">#&gt; Excluding 44.5 percent of genes.</span></span>
@@ -1403,7 +1405,7 @@ body {
 <span id="cb11-9"><a href="#cb11-9"></a><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>), <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>))</span>
 <span id="cb11-10"><a href="#cb11-10"></a></span>
 <span id="cb11-11"><a href="#cb11-11"></a><span class="co"># AqNPATisMix outline=T for LBO</span></span>
-<span id="cb11-12"><a href="#cb11-12"></a><span class="kw">boxplot</span>(featureCount_repl1[<span class="op">!</span>weak.flg,],</span>
+<span id="cb11-12"><a href="#cb11-12"></a><span class="kw">boxplot</span>(geneExpression_repl1[<span class="op">!</span>weak.flg,],</span>
 <span id="cb11-13"><a href="#cb11-13"></a>  <span class="dt">add =</span> F,</span>
 <span id="cb11-14"><a href="#cb11-14"></a>  <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">5</span>), </span>
 <span id="cb11-15"><a href="#cb11-15"></a>  <span class="dt">staplewex =</span> <span class="dv">0</span>, <span class="co"># remove horizontal whisker lines</span></span>
@@ -1420,13 +1422,13 @@ body {
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a></span>
 <span id="cb12-2"><a href="#cb12-2"></a><span class="kw">par</span>(<span class="dt">mfcol =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">xpd =</span> <span class="ot">NA</span>, <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">0</span>))</span>
 <span id="cb12-3"><a href="#cb12-3"></a></span>
-<span id="cb12-4"><a href="#cb12-4"></a>MDS.out &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">plotMDS</span>(featureCount_repl1[<span class="op">!</span>weak.flg,],</span>
+<span id="cb12-4"><a href="#cb12-4"></a>MDS.out &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">plotMDS</span>(geneExpression_repl1[<span class="op">!</span>weak.flg,],</span>
 <span id="cb12-5"><a href="#cb12-5"></a>  <span class="dt">col =</span> pamCol_vec[sampDesc_repl1<span class="op">$</span>pam50_subtype],</span>
 <span id="cb12-6"><a href="#cb12-6"></a>  <span class="dt">pch=</span><span class="dv">1</span></span>
 <span id="cb12-7"><a href="#cb12-7"></a>)</span>
 <span id="cb12-8"><a href="#cb12-8"></a></span>
 <span id="cb12-9"><a href="#cb12-9"></a></span>
-<span id="cb12-10"><a href="#cb12-10"></a>MDS.out &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">plotMDS</span>(featureCount_repl1[<span class="op">!</span>weak.flg,],</span>
+<span id="cb12-10"><a href="#cb12-10"></a>MDS.out &lt;-<span class="st"> </span>limma<span class="op">::</span><span class="kw">plotMDS</span>(geneExpression_repl1[<span class="op">!</span>weak.flg,],</span>
 <span id="cb12-11"><a href="#cb12-11"></a>  <span class="dt">col =</span> pamCol_vec[sampDesc_repl1<span class="op">$</span>pam50_subtype],</span>
 <span id="cb12-12"><a href="#cb12-12"></a>  <span class="dt">pch=</span><span class="dv">1</span>,</span>
 <span id="cb12-13"><a href="#cb12-13"></a>  <span class="dt">dim.plot =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">4</span></span>

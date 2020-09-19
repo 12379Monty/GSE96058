@@ -35,13 +35,13 @@ findings.
   - The gene expression data are stored in several tables due to github
     file size restrictions:
     
-      - featureCount\_repl1, featureCount\_repl2: 30865 x 136 tables of
-        counts for replicated samples
-      - featureCount\_sub1-\_sub5: 30865 x 626-629 tables of counts for
-        random subsets of samples, balanced over pam scores.
+      - geneExpression\_repl1, geneExpression\_repl2: 30865 x 136 tables
+        of counts for replicated samples
+      - geneExpression\_sub1-\_sub5: 30865 x 626-629 tables of counts
+        for random subsets of samples, balanced over pam scores.
 
-  - We use `featureCount` although the gene coverage measures stored in
-    the GEO data set are `FPKM` estimates of gene expression.
+For a description of `geneExpression` see **GSE96058\_Data\_Processing**
+below.
 
 <br/>
 
@@ -98,29 +98,13 @@ A data frame with one column describing data processing in GSE96058
 
 <td style="text-align:left;">
 
-featureCount\_repl1
+geneExpression\_repl1
 
 </td>
 
 <td style="text-align:left;">
 
-A matrix of feature counts for replicated samples - replicate 1
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-featureCount\_repl2
-
-</td>
-
-<td style="text-align:left;">
-
-A matrix of feature counts for replicated samples - replicate 2
+A matrix of gene expression for replicated samples - replicate 1
 
 </td>
 
@@ -130,13 +114,29 @@ A matrix of feature counts for replicated samples - replicate 2
 
 <td style="text-align:left;">
 
-featureCount\_sub1
+geneExpression\_repl2
 
 </td>
 
 <td style="text-align:left;">
 
-A matrix of feature counts for a random subset of samples balanced
+A matrix of gene expression for replicated samples - replicate 2
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+geneExpression\_sub1
+
+</td>
+
+<td style="text-align:left;">
+
+A matrix of gene expression for a random subset of samples balanced
 according to pam50 category
 
 </td>
@@ -147,13 +147,13 @@ according to pam50 category
 
 <td style="text-align:left;">
 
-featureCount\_sub2
+geneExpression\_sub2
 
 </td>
 
 <td style="text-align:left;">
 
-A matrix of feature counts for a random subset of samples balanced
+A matrix of gene expression for a random subset of samples balanced
 according to pam50 category
 
 </td>
@@ -164,13 +164,13 @@ according to pam50 category
 
 <td style="text-align:left;">
 
-featureCount\_sub3
+geneExpression\_sub3
 
 </td>
 
 <td style="text-align:left;">
 
-A matrix of feature counts for a random subset of samples balanced
+A matrix of gene expression for a random subset of samples balanced
 according to pam50 category
 
 </td>
@@ -181,13 +181,13 @@ according to pam50 category
 
 <td style="text-align:left;">
 
-featureCount\_sub4
+geneExpression\_sub4
 
 </td>
 
 <td style="text-align:left;">
 
-A matrix of feature counts for a random subset of samples balanced
+A matrix of gene expression for a random subset of samples balanced
 according to pam50 category
 
 </td>
@@ -198,13 +198,13 @@ according to pam50 category
 
 <td style="text-align:left;">
 
-featureCount\_sub5
+geneExpression\_sub5
 
 </td>
 
 <td style="text-align:left;">
 
-A matrix of feature counts for a random subset of samples balanced
+A matrix of gene expression for a random subset of samples balanced
 according to pam50 category
 
 </td>
@@ -866,6 +866,8 @@ ER=NA
 
 </table>
 
+<br/>
+
 Similarly for PGR, HER2 and ki67.
 
 <br/>
@@ -944,18 +946,18 @@ pamVal_vec <- with(sampDesc, unique(pam50_subtype))
 pamCol_vec <- col_vec[1:length(pamVal_vec)]
 names(pamCol_vec) <- pamVal_vec
 
-sampDesc_repl1 <- sampDesc[match(colnames(featureCount_repl1), sampDesc$title),]
+sampDesc_repl1 <- sampDesc[match(colnames(geneExpression_repl1), sampDesc$title),]
 
 o.v <- order(sampDesc_repl1$bioSample)
 
 sampDesc_repl1 <- sampDesc_repl1[o.v,]
-featureCount_repl1 <- featureCount_repl1[, o.v]
+geneExpression_repl1 <- geneExpression_repl1[, o.v]
 rm(o.v)
 
 par(mfrow = c(1, 1), mar = c(2, 2, 2, 4), oma = c(0, 1, 4, 2))
 
 # AqNPATisMix outline=T for LBO
-boxplot(featureCount_repl1,
+boxplot(geneExpression_repl1,
   add = F,
   ylim = c(-4, 4), 
   staplewex = 0, # remove horizontal whisker lines
@@ -976,15 +978,15 @@ legend('top', text.col=pamCol_vec, legend=names(pamCol_vec), bty='n', horiz=T)
 par(mfcol = c(1, 1), mar = c(2, 2, 1, 1), oma = c(0, 3, 2, 0))
 
 
-plot(density(featureCount_repl1[, 1]),
+plot(density(geneExpression_repl1[, 1]),
   col = pamCol_vec[sampDesc_repl1$pam50_subtype[1]],
   lty = 1, lwd = 2, 
   xlim = c(-4, 7), ylim = c(0, .4), las = 2, main = "", xlab = ""
 )
 title("Coverage densities for repl1 samples")
 
-for (JJ in 2:ncol(featureCount_repl1)) {
-  den <- density(featureCount_repl1[, JJ])
+for (JJ in 2:ncol(geneExpression_repl1)) {
+  den <- density(geneExpression_repl1[, JJ])
   lines(den$x, den$y,
     col = pamCol_vec[sampDesc_repl1$pam50_subtype[JJ]],
     lty = 1)
@@ -1002,7 +1004,7 @@ this analysis.
 
 ``` r
 
-weak.flg <- rowSums(featureCount_repl1 > 0)  < 10
+weak.flg <- rowSums(geneExpression_repl1 > 0)  < 10
 
 cat("Excluding", round(100*mean(weak.flg),1), "percent of genes.\n")
 #> Excluding 44.5 percent of genes.
@@ -1012,7 +1014,7 @@ cat(sum(!weak.flg), 'genes kept for analysis.\n')
 par(mfrow = c(1, 1), mar = c(2, 2, 2, 4), oma = c(0, 1, 4, 2))
 
 # AqNPATisMix outline=T for LBO
-boxplot(featureCount_repl1[!weak.flg,],
+boxplot(geneExpression_repl1[!weak.flg,],
   add = F,
   ylim = c(-1, 5), 
   staplewex = 0, # remove horizontal whisker lines
@@ -1032,13 +1034,13 @@ legend('top', text.col=pamCol_vec, legend=names(pamCol_vec), bty='n', horiz=T)
 
 par(mfcol = c(1, 2), mar = c(4, 4, 2, 1), xpd = NA, oma = c(0, 0, 2, 0))
 
-MDS.out <- limma::plotMDS(featureCount_repl1[!weak.flg,],
+MDS.out <- limma::plotMDS(geneExpression_repl1[!weak.flg,],
   col = pamCol_vec[sampDesc_repl1$pam50_subtype],
   pch=1
 )
 
 
-MDS.out <- limma::plotMDS(featureCount_repl1[!weak.flg,],
+MDS.out <- limma::plotMDS(geneExpression_repl1[!weak.flg,],
   col = pamCol_vec[sampDesc_repl1$pam50_subtype],
   pch=1,
   dim.plot = 3:4

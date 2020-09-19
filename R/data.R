@@ -47,161 +47,161 @@
 #'
 "data_processing"
 
-#' A matrix of feature counts for replicated samples - replicate 1
+#' A matrix of gene expression for replicated samples - replicate 1
 #'
-#' featureCount_repl1 - a matrix of feature counts for replicated samples - replicate 1
+#' geneExpression_repl1 - a matrix of gene expression for replicated samples - replicate 1
 #'    rows are feature; columns are samples.
-"featureCount_repl1"
+"geneExpression_repl1"
 
-#' A matrix of feature counts for replicated samples - replicate 2
+#' A matrix of gene expression for replicated samples - replicate 2
 #'
-#' featureCount_repl2 - a matrix of feature counts for replicated samples - replicate 1
+#' geneExpression_repl2 - a matrix of gene expression for replicated samples - replicate 1
 #'    rows are feature; columns are samples.
-"featureCount_repl2"
+"geneExpression_repl2"
 
-#' A matrix of feature counts for replicated samples - replicate 2
+#' A matrix of gene expression for replicated samples - replicate 2
 #'
-#' featureCount_repl2 - a matrix of feature counts for replicated samples - replicate 1
+#' geneExpression_repl2 - a matrix of gene expression for replicated samples - replicate 1
 #'    rows are feature; columns are samples.
-"featureCount_repl2"
+"geneExpression_repl2"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub2 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub2 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub2"
+"geneExpression_sub2"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub3 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub3 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub3"
+"geneExpression_sub3"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub4 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub4 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub4"
+"geneExpression_sub4"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub5 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub5 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub5"
+"geneExpression_sub5"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
-#' A matrix of feature counts for a random subset  of samples balanced according to pam50 category
+#' A matrix of gene expression for a random subset  of samples balanced according to pam50 category
 #'
-#' featureCount_sub1 - a matrix of feature counts for random subset  of samples balanced according to pam50 category
+#' geneExpression_sub1 - a matrix of gene expression for random subset  of samples balanced according to pam50 category
 #'    rows are feature; columns are samples.
-"featureCount_sub1"
+"geneExpression_sub1"
 
 
 #' A data frame describing the features
