@@ -183,7 +183,6 @@ Similarly for PGR, HER2 and ki67.
 
 
 ```{r chemo-survival, fig.height=4, fig.width=6}
- ###, fig.cap="Survival Days vs chemo_treated*ovrallSurvEvent"}
 
 chemo_surv_lst <- with(sampDesc %>% dplyr::filter(chemo_treated %in% c('0','1')),
   split(ovrallSurvDays, 
@@ -198,7 +197,6 @@ title("Survival Days vs chemo_treated*ovrallSurvEvent")
 Can similarly examine survival vs endocrine_treated.
 
 ```{r endocrine-survival, fig.height=4, fig.width=6}
- ###, fig.cap="Survival Days vs endocrine_treated*ovrallSurvEvent",eval=F, echo=F}
 
 endocrine_surv_lst <- with(sampDesc %>% dplyr::filter(endocrine_treated %in% c('0','1')),
   split(ovrallSurvDays, 
@@ -222,7 +220,6 @@ the PAM50 score distribution constant.
 
 
 ```{r look-pam50, fig.height=4, fig.width=6}
- ###, fig.cap="Sapmple PAM subtype vs Count Table" }
 
 pam50_byTable_tbl <- with(sampDesc,
  table(pam50_subtype, countTable))
@@ -239,7 +236,6 @@ First look at coverage, ordered by sample ID (sometimes a proxy for
 processing time effects)
 
 ```{r bxp-repl1, fig.height=4, fig.width=10}
-###, fig.cap="Coverage for repl1 samples ordered by bioSample ID"}
 KellyColors.vec <- c(
   "#222222", "#F3C300", "#875692", "#F38400", "#A1CAF1",
   "#BE0032", "#C2B280", "#848482", "#008856", "#E68FAC", "#0067A5",
@@ -280,7 +276,6 @@ legend('top', text.col=pamCol_vec, legend=names(pamCol_vec), bty='n', horiz=T)
 ```
 
 ```{r density-repl1, fig.height=4, fig.width=10}
-###, fig.cap="Coverage densities for repl1 samples"}
 
 par(mfcol = c(1, 1), mar = c(2, 2, 1, 1), oma = c(0, 3, 2, 0))
 
@@ -309,7 +304,6 @@ genes.  Apply this filter, requiring at a gene to be epxressed beyond this
 nominal value in at least 10 samples to be considered for this analysis.
 
 ```{r bxp-repl1-filtered, fig.height=4, fig.width=10}
-   ### , fig.cap="Filtered Coverage for repl1 samples orderd bi bioSample ID"}
 
 weak.flg <- rowSums(featureCount_repl1 > 0)  < 10
 
@@ -341,7 +335,6 @@ legend('top', text.col=pamCol_vec, legend=names(pamCol_vec), bty='n', horiz=T)
 
 
 ```{r plotMDS-repl1, cache=T, fig.height=4, fig.width=10}
-   ### , fig.cap='MDS plots filtered coverage in repl1 samples', echo=T}
 
 par(mfcol = c(1, 2), mar = c(4, 4, 2, 1), xpd = NA, oma = c(0, 0, 2, 0))
 

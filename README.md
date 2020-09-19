@@ -1064,7 +1064,6 @@ Similarly for PGR, HER2 and ki67.
 <!-- end list -->
 
 ``` r
- ###, fig.cap="Survival Days vs chemo_treated*ovrallSurvEvent"}
 
 chemo_surv_lst <- with(sampDesc %>% dplyr::filter(chemo_treated %in% c('0','1')),
   split(ovrallSurvDays, 
@@ -1080,7 +1079,6 @@ title("Survival Days vs chemo_treated*ovrallSurvEvent")
 Can similarly examine survival vs endocrine\_treated.
 
 ``` r
- ###, fig.cap="Survival Days vs endocrine_treated*ovrallSurvEvent",eval=F, echo=F}
 
 endocrine_surv_lst <- with(sampDesc %>% dplyr::filter(endocrine_treated %in% c('0','1')),
   split(ovrallSurvDays, 
@@ -1105,7 +1103,6 @@ title("Survival Days vs endocrine_treated*ovrallSurvEvent")
 <!-- end list -->
 
 ``` r
- ###, fig.cap="Sapmple PAM subtype vs Count Table" }
 
 pam50_byTable_tbl <- with(sampDesc,
  table(pam50_subtype, countTable))
@@ -1122,7 +1119,6 @@ First look at coverage, ordered by sample ID (sometimes a proxy for
 processing time effects)
 
 ``` r
-###, fig.cap="Coverage for repl1 samples ordered by bioSample ID"}
 KellyColors.vec <- c(
   "#222222", "#F3C300", "#875692", "#F38400", "#A1CAF1",
   "#BE0032", "#C2B280", "#848482", "#008856", "#E68FAC", "#0067A5",
@@ -1163,7 +1159,6 @@ legend('top', text.col=pamCol_vec, legend=names(pamCol_vec), bty='n', horiz=T)
 <img src="man/figures/README-bxp-repl1-1.png" width="100%" />
 
 ``` r
-###, fig.cap="Coverage densities for repl1 samples"}
 
 par(mfcol = c(1, 1), mar = c(2, 2, 1, 1), oma = c(0, 3, 2, 0))
 
@@ -1193,7 +1188,6 @@ beyond this nominal value in at least 10 samples to be considered for
 this analysis.
 
 ``` r
-   ### , fig.cap="Filtered Coverage for repl1 samples orderd bi bioSample ID"}
 
 weak.flg <- rowSums(featureCount_repl1 > 0)  < 10
 
@@ -1222,7 +1216,6 @@ legend('top', text.col=pamCol_vec, legend=names(pamCol_vec), bty='n', horiz=T)
 <img src="man/figures/README-bxp-repl1-filtered-1.png" width="100%" />
 
 ``` r
-   ### , fig.cap='MDS plots filtered coverage in repl1 samples', echo=T}
 
 par(mfcol = c(1, 2), mar = c(4, 4, 2, 1), xpd = NA, oma = c(0, 0, 2, 0))
 
