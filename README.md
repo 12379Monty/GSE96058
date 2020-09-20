@@ -1,6 +1,21 @@
 GSE96058 R Data Package
 ================
 
+<!--
+ FN <- 'tmp'
+ # Shotcuts for knitting and redering while in R session (Invoke interactive R from R/Scripts folder)
+ kk <- function(n='') knitr::knit2html(paste("t", n, sep=''), envir=globalenv(),
+       output=paste(FN,".html", sep=''))
+
+ rr <- function(n='') rmarkdown::render(paste("t", n, sep=''), envir=globalenv(),
+       output_file=paste(FN,".html", sep='')) ##, output_dir='Scripts')
+
+ bb <- function(n='') browseURL(paste(FN,".html", sep=''))
+
+ # The usual shotcuts
+ zz <- function(n='') source(paste("t", n, sep=''))
+-->
+
 -----
 
 <!--
@@ -885,7 +900,14 @@ chemo_surv_lst <- with(sampDesc %>% dplyr::filter(chemo_treated %in% c('0','1'))
    paste0('chemo_',chemo_treated, '\nSrvEv_', ovrallSurvEvent))
 )
 
-boxplot(chemo_surv_lst, ylab='ovrallSurvDays')
+library(gplots)
+#> 
+#> Attaching package: 'gplots'
+#> The following object is masked from 'package:stats':
+#> 
+#>     lowess
+boxplot2(chemo_surv_lst, ylab='ovrallSurvDays',xaxt='n')
+axis(side=1, at=1:length(chemo_surv_lst), labels=names(chemo_surv_lst), tick=F, line=1)
 title("Survival Days vs chemo_treated*ovrallSurvEvent")
 ```
 
@@ -900,7 +922,10 @@ endocrine_surv_lst <- with(sampDesc %>% dplyr::filter(endocrine_treated %in% c('
    paste0('endocrine_',endocrine_treated, '\nSrvEv_', ovrallSurvEvent))
 )
 
-boxplot(endocrine_surv_lst, ylab='ovrallSurvDays')
+
+library(gplots)
+boxplot2(endocrine_surv_lst, ylab='ovrallSurvDays',xaxt='n')
+axis(side=1, at=1:length(endocrine_surv_lst), labels=names(endocrine_surv_lst), tick=F, line=1)
 title("Survival Days vs endocrine_treated*ovrallSurvEvent")
 ```
 

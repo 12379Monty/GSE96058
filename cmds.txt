@@ -50,8 +50,6 @@ devtools::load_all()
 devtools::install()
 
 
-###########################
-
 # Creating a website for the R package
 # See https://mvuorre.github.io/exampleRPackage/
 usethis::use_pkgdown()
