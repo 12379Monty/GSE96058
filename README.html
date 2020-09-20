@@ -666,7 +666,7 @@ body {
 
 <td style="text-align:left;">
 
-<p>data_processing</p>
+<p>GSE96058_data_processing</p>
 </td>
 
 <td style="text-align:left;">
@@ -680,7 +680,7 @@ body {
 
 <td style="text-align:left;">
 
-<p>geneExpression_repl1</p>
+<p>GSE96058_geneExpression_repl1</p>
 </td>
 
 <td style="text-align:left;">
@@ -694,7 +694,7 @@ body {
 
 <td style="text-align:left;">
 
-<p>geneExpression_repl2</p>
+<p>GSE96058_geneExpression_repl2</p>
 </td>
 
 <td style="text-align:left;">
@@ -708,7 +708,7 @@ body {
 
 <td style="text-align:left;">
 
-<p>geneExpression_sub1</p>
+<p>GSE96058_geneExpression_sub1</p>
 </td>
 
 <td style="text-align:left;">
@@ -722,7 +722,7 @@ body {
 
 <td style="text-align:left;">
 
-<p>geneExpression_sub2</p>
+<p>GSE96058_geneExpression_sub2</p>
 </td>
 
 <td style="text-align:left;">
@@ -736,7 +736,7 @@ body {
 
 <td style="text-align:left;">
 
-<p>geneExpression_sub3</p>
+<p>GSE96058_geneExpression_sub3</p>
 </td>
 
 <td style="text-align:left;">
@@ -750,7 +750,7 @@ body {
 
 <td style="text-align:left;">
 
-<p>geneExpression_sub4</p>
+<p>GSE96058_geneExpression_sub4</p>
 </td>
 
 <td style="text-align:left;">
@@ -764,7 +764,7 @@ body {
 
 <td style="text-align:left;">
 
-<p>geneExpression_sub5</p>
+<p>GSE96058_geneExpression_sub5</p>
 </td>
 
 <td style="text-align:left;">
@@ -778,7 +778,7 @@ body {
 
 <td style="text-align:left;">
 
-<p>genes_annot</p>
+<p>GSE96058_genes_annot</p>
 </td>
 
 <td style="text-align:left;">
@@ -792,7 +792,7 @@ body {
 
 <td style="text-align:left;">
 
-<p>sampDesc</p>
+<p>GSE96058_sampDesc</p>
 </td>
 
 <td style="text-align:left;">
@@ -811,9 +811,16 @@ body {
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="kw">library</span>(GSE96058)</span>
 <span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a>knitr<span class="op">::</span><span class="kw">kable</span>(data_processing,</span>
-<span id="cb2-5"><a href="#cb2-5"></a>  <span class="dt">row.names=</span>F)  <span class="op">%&gt;%</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Strip GSE_ID prefix form object names</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="cf">for</span>(OBJ <span class="cf">in</span> <span class="kw">data</span>(<span class="dt">package=</span><span class="st">&#39;GSE96058&#39;</span>)<span class="op">$</span>results[, <span class="st">&#39;Item&#39;</span>])</span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="kw">assign</span>(<span class="kw">sub</span>(<span class="st">&#39;GSE96058_&#39;</span>,<span class="st">&#39;&#39;</span>,OBJ), <span class="kw">get</span>(OBJ))</span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="kw">detach</span>(package<span class="op">:</span>GSE96058, <span class="dt">unload =</span> T )</span>
+<span id="cb2-9"><a href="#cb2-9"></a></span>
+<span id="cb2-10"><a href="#cb2-10"></a></span>
+<span id="cb2-11"><a href="#cb2-11"></a>knitr<span class="op">::</span><span class="kw">kable</span>(data_processing,</span>
+<span id="cb2-12"><a href="#cb2-12"></a>  <span class="dt">row.names=</span>F)  <span class="op">%&gt;%</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 
 <thead>

@@ -97,7 +97,7 @@ Title
 
 <td style="text-align:left;">
 
-data\_processing
+GSE96058\_data\_processing
 
 </td>
 
@@ -113,7 +113,7 @@ A data frame with one column describing data processing in GSE96058
 
 <td style="text-align:left;">
 
-geneExpression\_repl1
+GSE96058\_geneExpression\_repl1
 
 </td>
 
@@ -129,7 +129,7 @@ A matrix of gene expression for replicated samples - replicate 1
 
 <td style="text-align:left;">
 
-geneExpression\_repl2
+GSE96058\_geneExpression\_repl2
 
 </td>
 
@@ -145,7 +145,7 @@ A matrix of gene expression for replicated samples - replicate 2
 
 <td style="text-align:left;">
 
-geneExpression\_sub1
+GSE96058\_geneExpression\_sub1
 
 </td>
 
@@ -162,7 +162,7 @@ according to pam50 category
 
 <td style="text-align:left;">
 
-geneExpression\_sub2
+GSE96058\_geneExpression\_sub2
 
 </td>
 
@@ -179,7 +179,7 @@ according to pam50 category
 
 <td style="text-align:left;">
 
-geneExpression\_sub3
+GSE96058\_geneExpression\_sub3
 
 </td>
 
@@ -196,7 +196,7 @@ according to pam50 category
 
 <td style="text-align:left;">
 
-geneExpression\_sub4
+GSE96058\_geneExpression\_sub4
 
 </td>
 
@@ -213,7 +213,7 @@ according to pam50 category
 
 <td style="text-align:left;">
 
-geneExpression\_sub5
+GSE96058\_geneExpression\_sub5
 
 </td>
 
@@ -230,7 +230,7 @@ according to pam50 category
 
 <td style="text-align:left;">
 
-genes\_annot
+GSE96058\_genes\_annot
 
 </td>
 
@@ -246,7 +246,7 @@ A data frame describing the features
 
 <td style="text-align:left;">
 
-sampDesc
+GSE96058\_sampDesc
 
 </td>
 
@@ -271,6 +271,13 @@ GSE96058 data package; `data_processing`
 ``` r
 
 library(GSE96058)
+
+# Strip GSE_ID prefix form object names
+for(OBJ in data(package='GSE96058')$results[, 'Item'])
+assign(sub('GSE96058_','',OBJ), get(OBJ))
+
+detach(package:GSE96058, unload = T )
+
 
 knitr::kable(data_processing,
   row.names=F)  %>%

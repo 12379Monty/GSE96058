@@ -110,6 +110,13 @@ in the GSE96058 data package; `data_processing`
 
 library(GSE96058)
 
+# Strip GSE_ID prefix form object names
+for(OBJ in data(package='GSE96058')$results[, 'Item'])
+assign(sub('GSE96058_','',OBJ), get(OBJ))
+
+detach(package:GSE96058, unload = T )
+
+
 knitr::kable(data_processing,
   row.names=F)  %>%
   kableExtra::kable_styling(full_width = F)

@@ -88,15 +88,7 @@ Read sample description file for first platform.
 
 
 ```r
- GSEMatrix_obj <- GEOquery::getGEO(filename = SAMPLE_DESC_FILE1, GSEMatrix = T)
-```
-
-```
-## Setting options('download.file.method.GEOquery'='auto')
-```
-
-```
-## Setting options('GEOquery.inmemory.gpl'=FALSE)
+ GSEMatrix_obj <- GEOquery::getGEO(filename = SAMPLE_DESC_FILE1, GSEMatrix = T, getGPL = F)
 ```
 
 ```
@@ -108,14 +100,6 @@ Read sample description file for first platform.
 
 ```
 ## See spec(...) for full column specifications.
-```
-
-```
-## File stored at:
-```
-
-```
-## /var/folders/wd/v5lfllh152x0hwhtr773cnmnjqcpdt/T//RtmpXHr1t9/GPL11154.soft
 ```
 
 ```r
@@ -295,7 +279,8 @@ Read sample description file for first platform.
 
 ```r
  # save 
- save(list='data_processing', file=file.path(data_DIR, 'data_processing.rda'),
+ assign(paste0(GSE_ID,'_data_processing'),'data_processing')
+ save(list='data_processing', file=file.path(data_DIR, paste0(GSE_ID,'data_processing.rda')),
    compress='xz')
 ```
  
@@ -872,4 +857,15 @@ object.  Matrices will be assembled as needed.
 -->
 
 
+
+
+<br/>
+
+## Rename and Save all to GSE96058
+
+Save replicates in separate tables and the rest into a 5 random
+subsets balanced according to `pam50_subtype`.  The reason for
+save these into separate tables is dur to github file size constraints.
+
+Also, prefix object names for GSE_ID to avoid obkect masking problems.
 

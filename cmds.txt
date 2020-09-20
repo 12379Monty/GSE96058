@@ -49,6 +49,9 @@ devtools::check()
 devtools::load_all()
 devtools::install()
 
+# README
+Rscript -e "rmarkdown::render('README.Rmd')"
+
 
 # Creating a website for the R package
 # See https://mvuorre.github.io/exampleRPackage/
@@ -58,9 +61,6 @@ pkgdown::build_site()
 
 # travis
 usethis::use_travis()
-
-# README
-Rscript -e "rmarkdown::render('README.Rmd')"
 
 ###########################
 ### DO WE NEED ANY OF THIS???
