@@ -56,14 +56,19 @@ population-based series of 3,273 BCs that included a median follow-up of 52
 months (Sweden Cancerome Analysis Network—Breast [SCAN-B], 
 ClinicalTrials.gov identifier: NCT02306096), and results were evaluated by 
 agreement statistics and Kaplan-Meier and Cox survival analyses. 
-See  Brueffer et al. (2018) [@Brueffer:2018aa] for a detailed report
-of the findings.
+See  Brueffer et al. (2018) for a detailed report of the findings 
+(https://pubmed.ncbi.nlm.nih.gov/32913985).
+
+<!--
+[@Brueffer:2018aa] 
+-->
+
 
 ### User notes
 
 * The data in NCBI GEO
 [Series GSE96058](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96058)
-does not contain any of the training samples discussed in the Brueffer et al. (2018) [@Brueffer:2018aa]
+does not contain any of the training samples discussed in the Brueffer et al. (2018)
 paper.  This package therefore only contains samples from the prospective
 population-based series of 3,273 BCs.
 
@@ -130,19 +135,21 @@ knitr::kable(data_processing,
 ### ER/PR/HER2 status
 
 * To  identify breast cancer associated read-through fusion transcripts,
-Varley et al. (2014) [@Varley:2014aa] analyzed the paired-end
-RNA-seq data from of 168 breast samples, including 28 breast cancer
+Varley et al. (2014) (https://doi.org/10.1007/s10549-014-3019-2) 
+analyzed the paired-end RNA-seq data from of 168 breast samples, including 28 breast cancer
 cell lines, 42 triple negative breast cancer primary tumors,
 42 estrogen receptor positive breast cancer primary
 tumors, and 56 non-malignant breast tissue samples. Data
-are deposited in [GEO GSE58135](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE58135)
+are deposited in [GEO GSE58135](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE58135).
+<!--[@Varley:2014aa] -->
 
-* Analyzing this dataset Li et al. (2018) [@Li:2018aa] identified 
-797 DEGs uniquely expressed in triple negative BC (TNBC) and 1403 DEGs uniquely expressed 
+* Analyzing this dataset Li et al. (2018) ( https://www.ncbi.nlm.nih.gov/pubmed/30089167)
+identified 797 DEGs uniquely expressed in triple negative BC (TNBC) and 1403 DEGs uniquely expressed 
 in estrogen positive and HER2 negative BC (ER+HER2-BC).   
+<!--[@Li:2018aa]--> 
 
 This dataset has a limited number of TNBC and ER+HER2-BC that could be examined
-to verify the findings in Li et al. (2018) [@Li:2018aa]. 
+to verify the findings in Li et al. (2018).
 
 ```{r, eval=T}
 
@@ -405,9 +412,6 @@ Please note that the 'GSE96058' project is released with a [Contributor Code of 
 
 ----- 
 
-## References
-
-<div id="refs"></div>
 
 <!--
 

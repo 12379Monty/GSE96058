@@ -1,0 +1,16 @@
+R.cmds
+git.cmds
+
+###docs - this is where the package page stuff it
+data-raw/cache
+data-raw/figures
+
+inst/doc
+.DS_Store
+###docs
+docs
+
+tmp*
+tmp*.*
+t
+t.txt
